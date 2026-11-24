@@ -114,6 +114,21 @@ details.card[open] summary::before{transform:rotate(90deg)}
 </head>
 <body>
 
+<div id="login" class="lock" style="display:none">
+  <div class="box">
+    <h2>☁️ Mi Plan</h2>
+    <p class="muted small">Inicia sesión con tu cuenta de Firebase para cargar y guardar tus datos en la nube.</p>
+    <input type="email" id="loginEmail" placeholder="Correo" autocomplete="username" style="margin-bottom:8px">
+    <input type="password" id="loginPass" placeholder="Contraseña" autocomplete="current-password">
+    <div id="loginErr" class="small" style="color:var(--bad);min-height:20px;margin-top:6px"></div>
+    <button class="btn" style="width:100%" id="loginBtn">Ingresar</button>
+    <div class="row mt" style="justify-content:space-between">
+      <button class="btn ghost sm" id="loginForgot">Olvidé mi contraseña</button>
+      <button class="btn ghost sm" id="loginLocal">Usar sin nube</button>
+    </div>
+  </div>
+</div>
+
 <div id="lock" class="lock" style="display:none">
   <div class="box">
     <h2>🔒 Mi Plan</h2>
@@ -121,7 +136,7 @@ details.card[open] summary::before{transform:rotate(90deg)}
     <input type="password" id="lockPass" placeholder="Clave" autocomplete="current-password">
     <div id="lockErr" class="small" style="color:var(--bad);min-height:20px;margin-top:6px"></div>
     <button class="btn" style="width:100%" id="lockBtn">Abrir</button>
-    <p class="small muted mt">¿Olvidaste la clave? Solo puedes restaurar desde un respaldo .json.<br><button class="btn ghost sm mt" id="lockReset">Borrar datos y empezar de nuevo</button></p>
+    <p class="small muted mt">¿Olvidaste la clave de cifrado? Solo puedes restaurar desde un respaldo .json.<br><button class="btn ghost sm mt" id="lockReset">Borrar datos y empezar de nuevo</button></p>
   </div>
 </div>
 
@@ -131,7 +146,7 @@ details.card[open] summary::before{transform:rotate(90deg)}
       <h1>Mi Plan · Transición profesional</h1>
       <p id="hdrSub">Salida planificada, ordenada y protegida</p>
     </div>
-    <button class="lockbtn" id="hdrLock" title="Bloquear" style="display:none">🔒 Bloquear</button>
+    <div class="row" style="gap:6px;justify-content:flex-end"><button class="lockbtn" id="cloudBadge" data-go="ajustes" title="Estado de la nube">💾 Solo local</button><button class="lockbtn" id="hdrLock" title="Bloquear" style="display:none">🔒 Bloquear</button></div>
   </div>
   <nav id="nav"></nav>
 </header>
@@ -140,13 +155,15 @@ details.card[open] summary::before{transform:rotate(90deg)}
 <div class="toast" id="toast"></div>
 <div id="modalRoot"></div>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <script>
 'use strict';
+const $ = s => document.querySelector(s);
 /* =========================================================
    CONFIGURACIÓN BASE
    ========================================================= */
-const STORE_PLAIN = 'miplan_v1';
-const STORE_ENC   = 'miplan_v1_enc';
 const TABS = [
   ['inicio','Inicio'],['plan','Plan por fases'],['finanzas','Finanzas'],['legal','Protección legal'],
   ['registro','Registro'],['busqueda','Búsqueda'],['plantillas','Plantillas'],['bienestar','Bienestar'],['ajustes','Ajustes']
@@ -256,29 +273,73 @@ function defaultState(){
 }
 
 /* =========================================================
-   ALMACENAMIENTO (con cifrado opcional AES-GCM)
+   FIREBASE (tu proyecto personal)
+   Pega aquí la configuración web de tu proyecto:
+   Consola Firebase → Configuración del proyecto → Tus apps → SDK config.
+   También puedes pegarla desde la app: Ajustes → Nube.
    ========================================================= */
+const FIREBASE_CONFIG = {
+  apiKey: "",                                   // ← PEGA AQUÍ TU apiKey
+  authDomain: "casabecas-8afea.firebaseapp.com",
+  databaseURL: "https://casabecas-8afea-default-rtdb.firebaseio.com",
+  projectId: "casabecas-8afea",
+  storageBucket: "casabecas-8afea.appspot.com",
+  messagingSenderId: "",
+  appId: ""
+};
+const OWNER_UID = "s51EqDX0m9hWmo9C4Hy00dFqD0C3";  // UID autorizado en las reglas
+const FB_PATH = 'miplan';                          // nodo en Realtime Database: /miplan/{uid}
+
+/* =========================================================
+   ALMACENAMIENTO: copia local + Firebase, con cifrado opcional AES-GCM
+   ========================================================= */
+const STORE_LOCAL = 'miplan_v2', STORE_CFG = 'miplan_fbcfg';
 let S = null, CRYPTO_KEY = null, CRYPTO_SALT = null, TAB = 'inicio';
+let FB = null, USER = null, REF = null, LISTENING = false, ONLINE = true, NEED_PUSH = false;
+let CLOUD = 'off', LAST_SYNC = null, lastRemoteTs = 0, PENDING_ENV = null, LOCAL_ONLY = false;
+const DEVICE = (()=>{ let d=localStorage.getItem('miplan_dev'); if(!d){ d=uid(); localStorage.setItem('miplan_dev',d);} return d; })();
 const b64 = buf => btoa(String.fromCharCode(...new Uint8Array(buf)));
 const unb64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
 async function deriveKey(pass, salt){
   const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(pass), 'PBKDF2', false, ['deriveKey']);
   return crypto.subtle.deriveKey({name:'PBKDF2', salt, iterations:250000, hash:'SHA-256'}, base, {name:'AES-GCM', length:256}, false, ['encrypt','decrypt']);
 }
-async function encryptState(){
+// "Sobre" = lo que se guarda (local y nube): {enc:false,data} o {enc:true,salt,iv,ct}
+async function pack(){
+  if(!CRYPTO_KEY) return JSON.stringify({enc:false, data:S});
   const iv = crypto.getRandomValues(new Uint8Array(12));
   const ct = await crypto.subtle.encrypt({name:'AES-GCM', iv}, CRYPTO_KEY, new TextEncoder().encode(JSON.stringify(S)));
-  return JSON.stringify({salt:b64(CRYPTO_SALT), iv:b64(iv), ct:b64(ct)});
+  return JSON.stringify({enc:true, salt:b64(CRYPTO_SALT), iv:b64(iv), ct:b64(ct)});
 }
+async function decryptEnv(env, key){
+  const pt = await crypto.subtle.decrypt({name:'AES-GCM', iv:unb64(env.iv)}, key, unb64(env.ct));
+  return JSON.parse(new TextDecoder().decode(pt));
+}
+function localEnv(){
+  const v2 = localStorage.getItem(STORE_LOCAL); if(v2) return v2;
+  // migración desde la versión anterior
+  const oldEnc = localStorage.getItem('miplan_v1_enc'), oldPlain = localStorage.getItem('miplan_v1');
+  if(oldEnc){ try{ return JSON.stringify(Object.assign({enc:true}, JSON.parse(oldEnc))); }catch(e){} }
+  if(oldPlain){ try{ return JSON.stringify({enc:false, data:JSON.parse(oldPlain)}); }catch(e){} }
+  return null;
+}
+function clearLocal(){ ['miplan_v1','miplan_v1_enc',STORE_LOCAL].forEach(k=>localStorage.removeItem(k)); }
+
 let saveTimer = null;
-function save(){
+function save(immediate){
   clearTimeout(saveTimer);
   saveTimer = setTimeout(async ()=>{
-    try{
-      if(CRYPTO_KEY){ localStorage.setItem(STORE_ENC, await encryptState()); localStorage.removeItem(STORE_PLAIN); }
-      else { localStorage.setItem(STORE_PLAIN, JSON.stringify(S)); localStorage.removeItem(STORE_ENC); }
-    }catch(e){ toast('No se pudo guardar: '+e.message); }
-  },150);
+    if(!S) return;
+    let env;
+    try{ env = await pack(); localStorage.setItem(STORE_LOCAL, env); localStorage.removeItem('miplan_v1'); localStorage.removeItem('miplan_v1_enc'); }
+    catch(e){ toast('No se pudo guardar localmente: '+e.message); return; }
+    if(USER && REF){
+      CLOUD = 'saving'; updCloud();
+      REF.set({data:env, updatedAt:firebase.database.ServerValue.TIMESTAMP, by:DEVICE, v:2})
+        .then(()=>{ CLOUD='synced'; LAST_SYNC=new Date(); updCloud(); })
+        .catch(e=>{ CLOUD='error'; updCloud(); toast('Error al guardar en Firebase: '+(e.code||e.message)); });
+    }
+  }, immediate ? 0 : 400);
 }
 function migrate(st){
   const d = defaultState();
@@ -290,43 +351,157 @@ function migrate(st){
   st.legal = st.legal||{}; st.open = st.open||d.open;
   return st;
 }
+
+/* ---------- Configuración Firebase ---------- */
+function parseCfg(text){
+  let t = String(text||'').trim(); if(!t) return null;
+  const a=t.indexOf('{'), b=t.lastIndexOf('}'); if(a<0||b<a) return null;
+  t = t.slice(a,b+1);
+  let o; try{ o=JSON.parse(t); }catch(e){
+    const j = t.replace(/\/\/[^\n]*/g,'').replace(/'/g,'"').replace(/([{,]\s*)([A-Za-z_]\w*)\s*:/g,'$1"$2":').replace(/,\s*}/g,'}');
+    try{ o=JSON.parse(j); }catch(_){ return null; }
+  }
+  if(!o.apiKey || !o.projectId) return null;
+  if(!o.databaseURL) o.databaseURL = `https://${o.projectId}-default-rtdb.firebaseio.com`;
+  if(!o.authDomain) o.authDomain = `${o.projectId}.firebaseapp.com`;
+  return o;
+}
+function getCfg(){
+  try{ const c = JSON.parse(localStorage.getItem(STORE_CFG)||'null'); if(c&&c.apiKey) return c; }catch(e){}
+  return FIREBASE_CONFIG.apiKey ? FIREBASE_CONFIG : null;
+}
+function cloudReady(){ return !!(getCfg() && window.firebase); }
+
+/* ---------- Arranque ---------- */
 async function boot(){
-  const enc = localStorage.getItem(STORE_ENC);
-  if(enc){ document.getElementById('lock').style.display='flex'; document.getElementById('lockPass').focus(); return; }
-  try{ const raw = localStorage.getItem(STORE_PLAIN); S = raw ? migrate(JSON.parse(raw)) : defaultState(); }
-  catch(e){ S = defaultState(); }
-  if(!localStorage.getItem(STORE_PLAIN)) save();
+  const cfg = getCfg();
+  if(cfg && window.firebase){ initFirebase(cfg); return; }
+  if(cfg && !window.firebase) toast('No se pudo cargar Firebase (¿sin internet?). Trabajando con la copia local.');
+  openFromEnvelope(localEnv());
+}
+function openFromEnvelope(envStr){
+  let env = null;
+  try{ env = envStr ? JSON.parse(envStr) : null; }catch(e){ env = null; }
+  if(env && env.enc){ PENDING_ENV = env; showLock(); return; }
+  S = env && env.data ? migrate(env.data) : defaultState();
+  afterOpen();
+}
+function afterOpen(){
+  $('#lock').style.display='none'; $('#login').style.display='none';
+  if(NEED_PUSH){ NEED_PUSH=false; save(true); }
+  else if(!localStorage.getItem(STORE_LOCAL)) save(true);
+  attachListener();
   start();
 }
+function showLock(){ $('#login').style.display='none'; $('#lock').style.display='flex'; setTimeout(()=>$('#lockPass').focus(),50); }
 async function unlock(){
-  const pass = document.getElementById('lockPass').value;
-  const err = document.getElementById('lockErr');
+  const pass = $('#lockPass').value, err = $('#lockErr');
   if(!pass){ err.textContent='Ingresa tu clave.'; return; }
   err.textContent='Verificando…';
   try{
-    const o = JSON.parse(localStorage.getItem(STORE_ENC));
-    const salt = unb64(o.salt), key = await deriveKey(pass, salt);
-    const pt = await crypto.subtle.decrypt({name:'AES-GCM', iv:unb64(o.iv)}, key, unb64(o.ct));
-    S = migrate(JSON.parse(new TextDecoder().decode(pt)));
-    CRYPTO_KEY = key; CRYPTO_SALT = salt;
-    document.getElementById('lock').style.display='none';
-    document.getElementById('lockPass').value=''; err.textContent='';
-    start();
+    const salt = unb64(PENDING_ENV.salt), key = await deriveKey(pass, salt);
+    const st = await decryptEnv(PENDING_ENV, key);
+    S = migrate(st); CRYPTO_KEY = key; CRYPTO_SALT = salt; PENDING_ENV = null;
+    $('#lockPass').value=''; err.textContent='';
+    afterOpen();
   }catch(e){ err.textContent='Clave incorrecta.'; }
 }
-document.getElementById('lockBtn').onclick = unlock;
-document.getElementById('lockPass').addEventListener('keydown', e=>{ if(e.key==='Enter') unlock(); });
-document.getElementById('lockReset').onclick = ()=>{
-  if(confirm('Esto borrará definitivamente los datos cifrados de este navegador. ¿Continuar?')){
-    localStorage.removeItem(STORE_ENC); localStorage.removeItem(STORE_PLAIN); location.reload();
-  }
+$('#lockBtn').onclick = unlock;
+$('#lockPass').addEventListener('keydown', e=>{ if(e.key==='Enter') unlock(); });
+$('#lockReset').onclick = async ()=>{
+  if(!confirm('Esto borrará definitivamente tus datos cifrados de este dispositivo'+(USER?' y de tu Firebase':'')+'. ¿Continuar?')) return;
+  try{ if(USER&&REF) await REF.remove(); }catch(e){}
+  clearLocal(); location.reload();
 };
-document.getElementById('hdrLock').onclick = ()=>{ CRYPTO_KEY=null; S=null; location.reload(); };
+$('#hdrLock').onclick = ()=>{ CRYPTO_KEY=null; S=null; location.reload(); };
+
+/* ---------- Firebase: autenticación y sincronización ---------- */
+function initFirebase(cfg){
+  try{
+    if(!firebase.apps.length) firebase.initializeApp(cfg);
+    FB = {auth:firebase.auth(), db:firebase.database()};
+  }catch(e){ toast('Configuración de Firebase inválida: '+e.message); openFromEnvelope(localEnv()); return; }
+  CLOUD='connecting';
+  FB.db.ref('.info/connected').on('value', s=>{ ONLINE = !!s.val(); updCloud(); });
+  FB.auth.onAuthStateChanged(async u=>{
+    if(!u){ USER=null; REF=null; if(!S && !LOCAL_ONLY) showLogin(); updCloud(); return; }
+    if(USER && USER.uid===u.uid) return;
+    USER=u; REF=FB.db.ref(FB_PATH+'/'+u.uid); LISTENING=false;
+    $('#login').style.display='none';
+    if(S){ NEED_PUSH=false; await mergeOnLogin(); return; }   // inició sesión desde "solo local"
+    try{
+      const snap = await REF.get(), v = snap.val();
+      if(v && v.data){ lastRemoteTs = v.updatedAt||0; LAST_SYNC=new Date(); CLOUD='synced'; openFromEnvelope(v.data); }
+      else { NEED_PUSH = true; openFromEnvelope(localEnv()); }
+    }catch(e){
+      CLOUD='error'; toast(e.code==='PERMISSION_DENIED'?'Firebase rechazó el acceso: revisa las reglas (Ajustes → Nube).':'No se pudo leer la nube; usando la copia local.');
+      openFromEnvelope(localEnv());
+    }
+  });
+}
+async function mergeOnLogin(){
+  try{
+    const v=(await REF.get()).val();
+    if(v && v.data && confirm('Ya tienes datos guardados en tu Firebase. ¿Cargar los de la nube? (Aceptar = usar nube · Cancelar = subir los de este dispositivo)')){
+      lastRemoteTs=v.updatedAt||0; S=null; CRYPTO_KEY=null; openFromEnvelope(v.data);
+    } else { save(true); attachListener(); start(); }
+  }catch(e){ toast('Error con Firebase: '+(e.code||e.message)); }
+}
+function attachListener(){
+  if(!USER || !REF || LISTENING) return;
+  LISTENING = true;
+  REF.on('value', onRemote, e=>{ CLOUD='error'; updCloud(); toast('Sin permiso de lectura en Firebase: revisa las reglas.'); });
+}
+async function onRemote(snap){
+  const v = snap.val(); if(!v || !v.data) return;
+  const ts = v.updatedAt||0;
+  if(v.by===DEVICE){ lastRemoteTs=Math.max(lastRemoteTs,ts); return; }
+  if(ts<=lastRemoteTs) return;
+  lastRemoteTs = ts;
+  let env; try{ env=JSON.parse(v.data); }catch(e){ return; }
+  if(env.enc){
+    if(!CRYPTO_KEY || env.salt!==b64(CRYPTO_SALT)){ PENDING_ENV=env; S=null; $('#modalRoot').innerHTML=''; showLock(); toast('Los datos cambiaron en otro dispositivo: ingresa tu clave.'); return; }
+    try{ S = migrate(await decryptEnv(env, CRYPTO_KEY)); }catch(e){ PENDING_ENV=env; S=null; showLock(); return; }
+  } else { CRYPTO_KEY=null; CRYPTO_SALT=null; S = migrate(env.data); }
+  try{ localStorage.setItem(STORE_LOCAL, v.data); }catch(e){}
+  LAST_SYNC=new Date(); CLOUD='synced';
+  if(!$('#modalRoot').innerHTML) start(); else updCloud();
+  toast('🔄 Actualizado desde otro dispositivo');
+}
+function showLogin(){
+  $('#lock').style.display='none'; $('#login').style.display='flex';
+  setTimeout(()=>$('#loginEmail').focus(),50);
+}
+async function doLogin(){
+  const em=$('#loginEmail').value.trim(), pw=$('#loginPass').value, err=$('#loginErr');
+  if(!em||!pw){ err.textContent='Ingresa correo y contraseña.'; return; }
+  err.textContent='Ingresando…';
+  try{ await FB.auth.signInWithEmailAndPassword(em,pw); err.textContent=''; $('#loginPass').value=''; }
+  catch(e){ err.textContent = ({'auth/invalid-credential':'Correo o contraseña incorrectos.','auth/wrong-password':'Contraseña incorrecta.','auth/user-not-found':'No existe ese usuario.','auth/too-many-requests':'Demasiados intentos; espera unos minutos.','auth/network-request-failed':'Sin conexión a internet.'})[e.code] || ('Error: '+(e.code||e.message)); }
+}
+$('#loginBtn').onclick = doLogin;
+$('#loginPass').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
+$('#loginForgot').onclick = async ()=>{
+  const em=$('#loginEmail').value.trim(); if(!em){ $('#loginErr').textContent='Escribe tu correo primero.'; return; }
+  try{ await FB.auth.sendPasswordResetEmail(em); $('#loginErr').textContent='Te enviamos un correo para restablecer la contraseña.'; }
+  catch(e){ $('#loginErr').textContent='No se pudo enviar: '+(e.code||e.message); }
+};
+$('#loginLocal').onclick = ()=>{ LOCAL_ONLY=true; $('#login').style.display='none'; openFromEnvelope(localEnv()); toast('Modo local: los cambios NO se guardan en Firebase'); };
+function updCloud(){
+  const el=$('#cloudBadge'); if(!el) return;
+  let t, c;
+  if(!getCfg()){ t='💾 Solo local'; c='#f0b429'; }
+  else if(!USER){ t='☁️ Sin sesión'; c='#f0b429'; }
+  else if(!ONLINE){ t='📴 Sin conexión · se sincroniza al volver'; c='#f0b429'; }
+  else if(CLOUD==='saving'){ t='☁️ Guardando…'; c='#9cc9ef'; }
+  else if(CLOUD==='error'){ t='⚠️ Error de nube'; c='#ff8a80'; }
+  else { t='☁️ Guardado en Firebase'; c='#7ee2b8'; }
+  el.textContent=t; el.style.borderColor=c;
+}
 
 /* =========================================================
    UTILIDADES
    ========================================================= */
-const $ = s => document.querySelector(s);
 const esc = s => String(s??'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const money = n => '$ '+(Number(n)||0).toLocaleString('es-EC',{minimumFractionDigits:2,maximumFractionDigits:2});
 const pd = s => { if(!s) return null; const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); };
@@ -393,6 +568,7 @@ function criterios(){
    ========================================================= */
 function start(){
   $('#hdrLock').style.display = CRYPTO_KEY ? 'inline-block' : 'none';
+  updCloud();
   $('#hdrSub').textContent = (S.settings.nombre ? S.settings.nombre+' · ' : '') + 'Fecha meta: ' + fmtD(S.settings.fechaMeta);
   $('#nav').innerHTML = TABS.map(([k,l])=>`<button data-tab="${k}" class="${k===TAB?'act':''}">${l}</button>`).join('');
   render();
@@ -817,7 +993,7 @@ function spark(L){
 VIEWS.ajustes = () => {
   const st=S.settings;
   return `
-  <h2>Ajustes</h2><p class="sub">Fechas del plan, privacidad y respaldos.</p>
+  <h2>Ajustes</h2><p class="sub">Fechas del plan, privacidad, nube y respaldos.</p>
   <div class="grid g2">
     <div class="card"><h3>Plan</h3>
       <div class="fgrid">
@@ -829,14 +1005,15 @@ VIEWS.ajustes = () => {
       <button class="btn sec sm" data-act="shift3">Reprogramar Fase 3 según la nueva fecha meta</button>
     </div>
     <div class="card"><h3>Privacidad</h3>
-      <p class="small">Los datos se guardan <b>solo en este navegador</b> (no se envían a ningún servidor). Quien abra el enlace en otro dispositivo verá la app vacía.</p>
+      <p class="small">${USER?'Tus datos se guardan en tu Firebase y en una copia local de este dispositivo.':'Tus datos se guardan en este dispositivo.'} Con clave activa, <b>se cifran antes de salir de tu navegador</b>: en Firebase solo queda texto cifrado.</p>
       ${CRYPTO_KEY?`<div class="note ok small">🔒 Cifrado activo (AES-256). Se pedirá la clave al abrir la app.</div>
         <div class="row"><button class="btn sec sm" data-act="pwchange">Cambiar clave</button><button class="btn dan sm" data-act="pwoff">Quitar cifrado</button></div>`
-      :`<div class="note warn small">Recomendado: activa una clave para cifrar tus datos, sobre todo el registro de observaciones.</div>
+      :`<div class="note warn small">Muy recomendado: activa una clave para que en Firebase tus datos (sobre todo el registro de observaciones) queden cifrados.</div>
         <button class="btn sm" data-act="pwon">Activar clave</button>`}
       <p class="small muted mt">Usa esta app solo en tus dispositivos personales. Al publicarla en Netlify, elige un nombre de sitio neutro.</p>
     </div>
   </div>
+  ${cloudCard()}
   <div class="card mt"><h3>Valores base</h3>
     <p class="small muted">Parámetros que usan los cálculos. Cámbialos si tu situación es distinta o si cambia la norma. Años de servicio a hoy: <b>${aniosServicio()}</b>.</p>
     <div class="fgrid">
@@ -864,6 +1041,39 @@ VIEWS.ajustes = () => {
     <span class="sp"></span><button class="btn dan sm" data-act="reset">Reiniciar todo</button></div>
   </div>`;
 };
+const RULES_SNIPPET = `"miplan": {
+  "${OWNER_UID}": {
+    ".read":  "auth != null && auth.uid === '${OWNER_UID}'",
+    ".write": "auth != null && auth.uid === '${OWNER_UID}'"
+  }
+}`;
+function cloudCard(){
+  const cfg = getCfg();
+  const status = !cfg ? '<span class="pill warn">Sin configurar</span>' : !USER ? '<span class="pill warn">Sin sesión</span>' : CLOUD==='error' ? '<span class="pill bad">Error</span>' : !ONLINE ? '<span class="pill warn">Sin conexión</span>' : '<span class="pill ok">Conectado</span>';
+  return `<div class="card mt"><h3>☁️ Nube · Firebase ${status}</h3>
+    ${cfg && USER ? `<table class="small">
+        <tr><td>Proyecto</td><td><b>${esc(cfg.projectId)}</b></td></tr>
+        <tr><td>Usuario</td><td>${esc(USER.email||'')}<div class="muted">UID ${esc(USER.uid)}</div></td></tr>
+        <tr><td>Ruta de datos</td><td><code>/${FB_PATH}/${esc(USER.uid)}</code></td></tr>
+        <tr><td>Última sincronización</td><td>${LAST_SYNC?LAST_SYNC.toLocaleString('es-EC'):'—'}</td></tr>
+        <tr><td>Cifrado en la nube</td><td>${CRYPTO_KEY?'<span class="pill ok">Sí</span>':'<span class="pill warn">No: activa una clave en Privacidad</span>'}</td></tr>
+      </table>
+      ${USER.uid!==OWNER_UID?`<div class="note warn small">Este UID no coincide con el autorizado en el código (${OWNER_UID}). Si las reglas usan ese UID, Firebase rechazará la escritura.</div>`:''}
+      <div class="row mt"><button class="btn sm" data-act="syncnow">Sincronizar ahora</button><button class="btn sec sm" data-act="logout">Cerrar sesión</button></div>`
+    : cfg ? `<p class="small">Firebase está configurado (proyecto <b>${esc(cfg.projectId)}</b>) pero no has iniciado sesión. Tus cambios solo quedan en este dispositivo.</p>
+      <button class="btn sm" data-act="login">Iniciar sesión</button>`
+    : `<p class="small">Pega la configuración web de tu proyecto Firebase personal. La encuentras en <b>Consola Firebase → ⚙ Configuración del proyecto → General → Tus apps → Configuración del SDK</b>. Puedes pegar el bloque <code>const firebaseConfig = {...}</code> completo.</p>`}
+    <details class="mt"><summary class="small" style="cursor:pointer;color:var(--pri)">${cfg?'Cambiar configuración de Firebase':'Pegar configuración'}</summary>
+      <textarea id="cfgText" class="mt" style="min-height:130px;font-family:ui-monospace,monospace;font-size:12.5px" placeholder="const firebaseConfig = {\n  apiKey: &quot;...&quot;,\n  authDomain: &quot;...&quot;,\n  databaseURL: &quot;...&quot;,\n  projectId: &quot;...&quot;,\n  appId: &quot;...&quot;\n};"></textarea>
+      <div class="row mt"><button class="btn sm" data-act="cfgsave">Guardar y conectar</button>${localStorage.getItem(STORE_CFG)?'<button class="btn dan sm" data-act="cfgclear">Quitar configuración pegada</button>':''}</div>
+    </details>
+    <details class="mt"><summary class="small" style="cursor:pointer;color:var(--pri)">Reglas de seguridad para Realtime Database</summary>
+      <p class="small mt">Agrega este bloque <b>dentro de</b> <code>"rules": { ... }</code> de tu Realtime Database, junto a tus nodos existentes (no reemplaces las demás reglas). Verifica también que no exista un <code>".read": true</code> en la raíz, porque las reglas se heredan hacia abajo.</p>
+      <div class="tpl">${esc(RULES_SNIPPET)}</div>
+      <div class="mt"><button class="btn sec sm" data-act="copyrules">Copiar reglas</button></div>
+    </details>
+  </div>`;
+}
 AFTER.ajustes = () => { const f=$('#impFile'); if(f) f.onchange = importFile; };
 
 /* =========================================================
@@ -966,11 +1176,18 @@ document.addEventListener('click', e=>{
     case 'wdel': S.bienestar=S.bienestar.filter(x=>x.id!==id); save(); render(); break;
     case 'copy': { const txt=tplText(+el.dataset.i); (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>toast('Copiado al portapapeles')).catch(()=>{ const ta=document.createElement('textarea'); ta.value=txt; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); toast('Copiado'); }); break; }
     case 'export': exportFile(); break;
-    case 'reset': if(confirm('Se borrarán TODOS tus datos de este navegador. ¿Descargaste un respaldo?') && confirm('¿Confirmas reiniciar todo?')){ localStorage.removeItem(STORE_PLAIN); localStorage.removeItem(STORE_ENC); location.reload(); } break;
+    case 'reset': if(confirm('Se borrarán TODOS tus datos de este dispositivo'+(USER?' y de tu Firebase':'')+'. ¿Descargaste un respaldo?') && confirm('¿Confirmas reiniciar todo?')){ (USER&&REF?REF.remove():Promise.resolve()).catch(()=>{}).then(()=>{ clearLocal(); location.reload(); }); } break;
     case 'pwon': pwModal(false); break;
     case 'pwchange': pwModal(true); break;
     case 'pwoff': if(confirm('Tus datos quedarán guardados sin cifrar en este navegador. ¿Continuar?')){ CRYPTO_KEY=null; CRYPTO_SALT=null; save(); toast('Cifrado desactivado'); start(); } break;
     case 'shift3': shiftPhase3(); break;
+    case 'syncnow': save(true); toast('Sincronizando…'); break;
+    case 'login': if(!FB){ if(cloudReady()){ initFirebase(getCfg()); } else { toast('Firebase no está disponible'); break; } } LOCAL_ONLY=false; showLogin(); break;
+    case 'logout': if(CLOUD==='saving' && !confirm('Hay cambios guardándose todavía. ¿Cerrar sesión igual?')) break;
+      if(confirm('¿Cerrar sesión? Se borrará la copia local de este dispositivo (tus datos quedan en Firebase).')){ FB.auth.signOut().then(()=>{ clearLocal(); location.reload(); }); } break;
+    case 'cfgsave': { const c=parseCfg($('#cfgText').value); if(!c){ toast('No reconozco esa configuración (falta apiKey o projectId)'); break; } localStorage.setItem(STORE_CFG, JSON.stringify(c)); save(true); toast('Configuración guardada. Recargando…'); setTimeout(()=>location.reload(),700); break; }
+    case 'cfgclear': if(confirm('¿Quitar la configuración pegada?')){ localStorage.removeItem(STORE_CFG); location.reload(); } break;
+    case 'copyrules': (navigator.clipboard?navigator.clipboard.writeText(RULES_SNIPPET):Promise.reject()).then(()=>toast('Reglas copiadas')).catch(()=>toast('Selecciona y copia el texto manualmente')); break;
     case 'basereset': if(confirm('¿Restaurar los parámetros legales a sus valores por defecto? (No cambia tus fechas ni tu sueldo)')){ Object.assign(S.settings, BASE_DEF); save(); start(); toast('Valores base restaurados'); } break;
   }
 });
