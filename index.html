@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Mi Plan · Transición profesional</title>
+<style>
+:root{
+  --bg:#f4f6f8; --card:#ffffff; --ink:#1d2733; --muted:#5f6b7a; --line:#e2e7ed;
+  --pri:#1f5f8b; --pri2:#e8f1f8; --ok:#1e8a5a; --ok2:#e6f5ee; --warn:#b7791f; --warn2:#fdf4e3;
+  --bad:#c0392b; --bad2:#fdecea; --vio:#6b4fa3; --r:12px;
+  --sh:0 1px 2px rgba(16,24,40,.05),0 2px 8px rgba(16,24,40,.05);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.5}
+header{background:linear-gradient(135deg,#17496c,#1f5f8b);color:#fff;padding:18px 20px 0}
+header .top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;max-width:1150px;margin:0 auto}
+header h1{margin:0;font-size:20px;font-weight:650;letter-spacing:.2px}
+header p{margin:2px 0 0;opacity:.85;font-size:13px}
+header .lockbtn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:8px;padding:6px 10px;cursor:pointer;font-size:13px;white-space:nowrap}
+nav{max-width:1150px;margin:14px auto 0;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav button{background:transparent;border:0;color:rgba(255,255,255,.78);padding:10px 14px;font-size:14px;cursor:pointer;border-radius:10px 10px 0 0;white-space:nowrap;font-weight:500}
+nav button.act{background:var(--bg);color:var(--pri);font-weight:650}
+main{max-width:1150px;margin:0 auto;padding:20px 16px 60px}
+h2{font-size:19px;margin:0 0 4px}
+h3{font-size:16px;margin:0 0 10px}
+.sub{color:var(--muted);margin:0 0 18px;font-size:14px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;box-shadow:var(--sh)}
+.kpi .lbl{color:var(--muted);font-size:12.5px;text-transform:uppercase;letter-spacing:.4px}
+.kpi .val{font-size:28px;font-weight:700;margin-top:2px;line-height:1.15}
+.kpi .hint{font-size:12.5px;color:var(--muted);margin-top:4px}
+.bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:8px}
+.bar>i{display:block;height:100%;background:var(--pri);border-radius:99px;transition:width .4s}
+.bar.ok>i{background:var(--ok)} .bar.warn>i{background:var(--warn)} .bar.bad>i{background:var(--bad)}
+.pill{display:inline-block;font-size:11.5px;padding:2px 8px;border-radius:99px;background:var(--pri2);color:var(--pri);font-weight:600;white-space:nowrap}
+.pill.ok{background:var(--ok2);color:var(--ok)} .pill.warn{background:var(--warn2);color:var(--warn)} .pill.bad{background:var(--bad2);color:var(--bad)} .pill.gray{background:#eef1f4;color:var(--muted)}
+.note{border-left:4px solid var(--pri);background:var(--pri2);padding:10px 14px;border-radius:8px;font-size:14px;margin:12px 0}
+.note.warn{border-color:var(--warn);background:var(--warn2)} .note.ok{border-color:var(--ok);background:var(--ok2)} .note.bad{border-color:var(--bad);background:var(--bad2)}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.sp{flex:1}
+button.btn{background:var(--pri);color:#fff;border:0;border-radius:8px;padding:8px 14px;font-size:14px;cursor:pointer;font-weight:550}
+button.btn:hover{filter:brightness(1.08)}
+button.btn.sec{background:#fff;color:var(--pri);border:1px solid #c9d6e2}
+button.btn.ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}
+button.btn.dan{background:#fff;color:var(--bad);border:1px solid #efc4bf}
+button.btn.sm{padding:4px 10px;font-size:13px}
+label{font-size:13px;color:var(--muted);display:block;margin-bottom:4px;font-weight:500}
+input,select,textarea{width:100%;font:inherit;font-size:14px;padding:8px 10px;border:1px solid #cfd8e1;border-radius:8px;background:#fff;color:var(--ink)}
+input:focus,select:focus,textarea:focus{outline:2px solid #a9c8e2;border-color:var(--pri)}
+textarea{min-height:70px;resize:vertical}
+.fgrid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.chk{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line)}
+.chk:last-child{border-bottom:0}
+.chk input[type=checkbox]{width:19px;height:19px;margin-top:2px;flex-shrink:0;accent-color:var(--ok);cursor:pointer}
+.chk .t{font-weight:550}
+.chk .d{color:var(--muted);font-size:13.5px;margin-top:2px}
+.chk.done .t{text-decoration:line-through;color:var(--muted)}
+.chk .meta{display:flex;gap:8px;align-items:center;margin-top:6px;flex-wrap:wrap}
+.chk .meta input[type=date]{width:auto;padding:3px 6px;font-size:12.5px}
+.chk .meta .lnk{font-size:12.5px;color:var(--pri);cursor:pointer;background:none;border:0;padding:0}
+.phase{margin-bottom:16px}
+.phase-h{display:flex;align-items:center;gap:12px;cursor:pointer;user-select:none}
+.phase-h .num{width:34px;height:34px;border-radius:50%;background:var(--pri);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
+.phase-h .num.ok{background:var(--ok)}
+.phase-h h3{margin:0}
+.phase-h .per{color:var(--muted);font-size:13px}
+.phase-b{margin-top:12px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:8px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);font-weight:600}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.tot td{font-weight:700;border-top:2px solid var(--ink);border-bottom:0}
+.tblwrap{overflow-x:auto}
+.empty{color:var(--muted);text-align:center;padding:24px;font-size:14px}
+.tpl{white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;background:#f7f9fb;border:1px solid var(--line);border-radius:8px;padding:12px;max-height:340px;overflow:auto}
+details.card summary{cursor:pointer;font-weight:600;list-style:none;display:flex;align-items:center;gap:8px}
+details.card summary::-webkit-details-marker{display:none}
+details.card summary::before{content:"▸";color:var(--pri);transition:transform .2s}
+details.card[open] summary::before{transform:rotate(90deg)}
+.rule{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.rule:last-child{border-bottom:0}
+.rule .ic{width:30px;height:30px;border-radius:8px;background:var(--pri2);color:var(--pri);display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;font-size:14px}
+.rule .ic.bad{background:var(--bad2);color:var(--bad)} .rule .ic.ok{background:var(--ok2);color:var(--ok)}
+.rule b{display:block;margin-bottom:2px}
+.rule p{margin:0;color:var(--muted);font-size:14px}
+.crit{display:flex;gap:10px;align-items:center;padding:8px 0}
+.crit .dot{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;flex-shrink:0}
+.modal-bg{position:fixed;inset:0;background:rgba(15,25,35,.45);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
+.modal{background:#fff;border-radius:14px;max-width:640px;width:100%;max-height:92vh;overflow:auto;padding:20px;box-shadow:0 20px 50px rgba(0,0,0,.25)}
+.modal h3{margin-bottom:14px}
+.lock{position:fixed;inset:0;background:linear-gradient(135deg,#17496c,#1f5f8b);display:flex;align-items:center;justify-content:center;z-index:100;padding:16px}
+.lock .box{background:#fff;border-radius:16px;padding:28px;max-width:380px;width:100%;text-align:center}
+.lock .box h2{margin-bottom:6px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1d2733;color:#fff;padding:10px 18px;border-radius:10px;font-size:14px;z-index:200;opacity:0;transition:opacity .25s;pointer-events:none}
+.toast.show{opacity:1}
+.big-q{font-size:15px;font-style:italic;color:var(--ink);border-left:3px solid var(--vio);padding:4px 0 4px 12px;margin:8px 0}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.mt{margin-top:14px} .mb{margin-bottom:14px}
+.spark{width:100%;height:120px}
+@media (max-width:600px){
+  header h1{font-size:17px} .kpi .val{font-size:23px} main{padding:14px 10px 50px}
+  th,td{padding:6px 5px;font-size:13px}
+}
+@media print{header nav,.noprint{display:none!important} body{background:#fff} .card{box-shadow:none}}
+</style>
+</head>
+<body>
+
+<div id="lock" class="lock" style="display:none">
+  <div class="box">
+    <h2>🔒 Mi Plan</h2>
+    <p class="muted small">Tus datos están cifrados en este navegador. Ingresa tu clave.</p>
+    <input type="password" id="lockPass" placeholder="Clave" autocomplete="current-password">
+    <div id="lockErr" class="small" style="color:var(--bad);min-height:20px;margin-top:6px"></div>
+    <button class="btn" style="width:100%" id="lockBtn">Abrir</button>
+    <p class="small muted mt">¿Olvidaste la clave? Solo puedes restaurar desde un respaldo .json.<br><button class="btn ghost sm mt" id="lockReset">Borrar datos y empezar de nuevo</button></p>
+  </div>
+</div>
+
+<header>
+  <div class="top">
+    <div>
+      <h1>Mi Plan · Transición profesional</h1>
+      <p id="hdrSub">Salida planificada, ordenada y protegida</p>
+    </div>
+    <button class="lockbtn" id="hdrLock" title="Bloquear" style="display:none">🔒 Bloquear</button>
+  </div>
+  <nav id="nav"></nav>
+</header>
+
+<main id="app"></main>
+<div class="toast" id="toast"></div>
+<div id="modalRoot"></div>
+
+<script>
+'use strict';
+/* =========================================================
+   CONFIGURACIÓN BASE
+   ========================================================= */
+const STORE_PLAIN = 'miplan_v1';
+const STORE_ENC   = 'miplan_v1_enc';
+const TABS = [
+  ['inicio','Inicio'],['plan','Plan por fases'],['finanzas','Finanzas'],['legal','Protección legal'],
+  ['registro','Registro'],['busqueda','Búsqueda'],['plantillas','Plantillas'],['bienestar','Bienestar'],['ajustes','Ajustes']
+];
+const FASES = [
+  {n:0, t:'Diagnóstico y blindaje', per:'24 nov – 7 dic 2026', obj:'Cerrar cualquier exposición legal, conocer tus números reales y separar lo personal de lo laboral.'},
+  {n:1, t:'Colchón y marca profesional', per:'Diciembre 2026 – enero 2027', obj:'Construir tu respaldo financiero y preparar tu perfil sin anunciar nada.'},
+  {n:2, t:'Búsqueda activa', per:'Enero – febrero 2027', obj:'Generar opciones reales: empleo, clientes de consultoría o ambos.'},
+  {n:3, t:'Decisión y salida ordenada', per:'Marzo – abril 2027', obj:'Decidir con criterios objetivos, notificar correctamente y salir con todo en regla.'}
+];
+const uid = () => Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);
+const T = (fase,titulo,detalle,fecha,done=false,nota='') => ({id:uid(),fase,titulo,detalle,fecha,done,doneAt:done?today():'',nota,custom:false});
+
+function defaultTasks(){
+  return [
+    // FASE 0
+    T(0,'Confirmar que no constas como administrador ni firma registrada','Sin nombramiento en Registro Mercantil / Superintendencia de Compañías, sin firma en el SRI, sin firma bancaria ni claves de transferencia.','2026-11-23',true,'Confirmado: sin nombramiento, sin firma SCVS/SRI, sin firma de cheques ni claves bancarias.'),
+    T(0,'Verificar que todo egreso que sumillas tenga "Aprobado" de otra persona','Tu sumilla va en "Revisado". Si falta la firma de aprobación de quien autoriza, no seas el único respaldo del pago.','2026-11-30'),
+    T(0,'Definir el alcance de tu sumilla "Revisado"','Revisado = verificación de soporte documental, cálculo y registro contable; no autorización del gasto. Opcional: correo neutral (ver Plantillas).','2026-12-04'),
+    T(0,'Iniciar tu registro personal de observaciones','Solo hechos: fecha, nº de comprobante, qué observaste, a quién y cómo lo comunicaste. Sin copiar documentos de la empresa.','2026-11-30'),
+    T(0,'Descargar historial laboral y de aportes del IESS','Confirma tu fecha de afiliación con este empleador, número de aportes y que los meses estén completos.','2026-12-02'),
+    T(0,'Revisar saldo de fondos de reserva y fondo de cesantía (IESS)','Anota los valores en la sección Finanzas.','2026-12-02'),
+    T(0,'Confirmar fecha exacta de ingreso y días de vacaciones pendientes','Usa tus roles de pago / contrato; sin levantar sospechas. Actualiza la fecha en Ajustes.','2026-12-05'),
+    T(0,'Calcular la liquidación estimada','En la sección Finanzas y contrastar con la calculadora del Ministerio del Trabajo.','2026-12-05'),
+    T(0,'Elaborar tu presupuesto mensual real (gastos esenciales)','Arriendo, alimentación, servicios, transporte, seguros, educación, deudas. Ingresa el total en Finanzas.','2026-12-07'),
+    T(0,'Separar lo personal: no usar computadora, correo ni red de la empresa para este plan','Ni para la búsqueda de empleo ni para esta app.','2026-11-25'),
+    // FASE 1
+    T(1,'Fijar tu meta de colchón (mínimo 9 meses de gastos)','El seguro de desempleo del IESS no aplica si sales por desahucio/renuncia: tu colchón es tu red de seguridad.','2026-12-10'),
+    T(1,'Recortar gastos no esenciales y no contraer deudas nuevas','Revisa suscripciones, compras grandes y créditos. Posterga compras grandes hasta tener nuevo ingreso.','2026-12-15'),
+    T(1,'Destinar el décimo tercero de diciembre al colchón','','2026-12-24'),
+    T(1,'Agendar consulta con abogado laboral de confianza','Validar: desahucio vía SUT, cálculo de liquidación, utilidades 2026 y cualquier inquietud sobre tu responsabilidad.','2027-01-15'),
+    T(1,'Actualizar tu CV con logros cuantificados','Cumplimiento tributario y societario, respuesta a oficios SCVS, control interno, auditoría, flujo de caja, sistemas.','2027-01-10'),
+    T(1,'Actualizar LinkedIn sin anunciar tu salida','No actives "Open to work" público; usa la opción visible solo para reclutadores.','2027-01-12'),
+    T(1,'Escribir tu narrativa de salida','Positiva, sin hablar mal de nadie (ver Plantillas → guion de entrevista).','2027-01-12'),
+    T(1,'Hacer una lista de 30 contactos clave','Ex compañeros, auditores, abogados societarios, contadores, proveedores, clientes, cámaras y gremios.','2027-01-15'),
+    T(1,'Definir tu oferta de consultoría (servicios y precios)','Ej.: diagnóstico tributario-societario, respuesta a oficios, planificación tributaria, control documental de cumplimiento.','2027-01-20'),
+    T(1,'Preparar un portafolio con tus herramientas propias','Demostraciones de tus aplicaciones de planificación tributaria, control documental y análisis financiero (sin datos reales de la empresa).','2027-01-31'),
+    T(1,'Revisar tu RUC y la actividad económica para facturar consultoría','Solo si vas por la vía independiente o mixta.','2027-01-31'),
+    // FASE 2
+    T(2,'Contactar al menos 5 personas por semana','Conversaciones, no pedidos de trabajo: "¿qué ves en el mercado?", "¿a quién me recomiendas?".','2027-02-28'),
+    T(2,'Postular o enviar propuestas cada semana','Registra cada una en Búsqueda.','2027-02-28'),
+    T(2,'Conseguir 1–2 clientes piloto de consultoría','Precio de entrada razonable a cambio de referencia/testimonio.','2027-02-28'),
+    T(2,'Preparar entrevistas técnicas','Casos: cierre fiscal, oficio de la SCVS, planificación de IR, control interno de egresos.','2027-02-15'),
+    T(2,'Documentar los procesos de tu puesto (manual de funciones)','Facilita la entrega y demuestra profesionalismo.','2027-02-28'),
+    T(2,'Retirar gradualmente tus objetos y archivos personales','Solo lo personal. Nada que sea información de la empresa.','2027-02-28'),
+    // FASE 3
+    T(3,'Punto de decisión (revisar criterios en Inicio)','¿Oferta firmada, clientes suficientes o colchón ≥ meta? Si no, ajusta la fecha meta en Ajustes.','2027-03-01'),
+    T(3,'Si tienes oferta: confirmar condiciones y fecha de inicio por escrito','Cargo, sueldo, tipo de contrato, afiliación, fecha de inicio.','2027-03-05'),
+    T(3,'Conversar personalmente con los dueños, con gratitud','Antes o junto con la notificación formal. Sin reproches.','2027-03-12'),
+    T(3,'Notificar el desahucio en el sistema del Ministerio del Trabajo (SUT)','Mínimo 15 días antes de tu último día. Revisa la fecha límite en Inicio.','2027-03-13'),
+    T(3,'Elaborar y hacer firmar el acta de entrega','Firma de recepción de quien recibe; conserva tu copia (ver Plantillas).','2027-03-27'),
+    T(3,'Devolver activos y pedir baja de accesos con constancia','Equipo, llaves, tarjetas, correo, ERP, banca (consultas), sistemas.','2027-03-31'),
+    T(3,'Revisar valores y firmar el acta de finiquito en el SUT','No firmes si los valores no son correctos; pide corrección antes.','2027-04-05'),
+    T(3,'No firmar documentos distintos al finiquito y al acta de entrega','Ni "declaraciones de conformidad" con gestiones pasadas ni cartas de responsabilidad.','2027-03-31'),
+    T(3,'Dar seguimiento al pago de utilidades 2026','Te corresponden por el año completo trabajado; se pagan hasta el 15 de abril.','2027-04-15'),
+    T(3,'Definir tu afiliación al IESS después de salir','Nuevo empleador, afiliación como independiente o voluntaria, para no perder cobertura y aportes.','2027-04-15'),
+    T(3,'Evaluar retiro del fondo de cesantía (si no tienes nuevo empleo)','Según requisitos y plazos del IESS.','2027-05-31')
+  ];
+}
+
+const LEGAL = [
+  {g:'Tu práctica diaria', items:[
+    ['l1','No elaboro, modifico ni ejecuto documentos que sé que son incorrectos','Si te lo piden, declina con cortesía y por escrito (Plantillas → respuesta ante un pedido indebido).'],
+    ['l2','Mi sumilla "Revisado" solo va sobre soporte completo y con "Aprobado" de otra persona','Si el soporte está incompleto, anoto "observado" o devuelvo el comprobante con un correo.'],
+    ['l3','Mis objeciones quedan por escrito, en tono técnico y sin acusar','Norma, riesgo, recomendación. Nunca adjetivos ni juicios sobre personas.'],
+    ['l4','No sumillo retroactivamente ni acepto cambiar fechas de documentos','Un "favor" de última hora puede convertirse en tu única huella.'],
+    ['l5','Llevo mi registro personal de observaciones','Solo mis notas: fecha, nº de comprobante, a quién comuniqué y la referencia del correo (asunto y fecha).']
+  ]},
+  {g:'Información y confidencialidad', items:[
+    ['l6','No me llevo documentos, bases de datos ni archivos de la empresa','Ni ahora ni al salir. Puede volverse en tu contra (confidencialidad, protección de datos personales).'],
+    ['l7','No oculto, borro ni destruyo información','Ni la tuya ni la de otros. Al salir, entrega todo íntegro con acta.'],
+    ['l8','Uso solo dispositivos y correo personales para mi plan y mi búsqueda','Nada de esto en equipos ni redes de la empresa.'],
+    ['l9','En entrevistas y con terceros nunca comento detalles internos','Tu discreción es tu mejor carta de presentación.']
+  ]},
+  {g:'En la salida', items:[
+    ['l10','Salgo por desahucio en el SUT (no con una simple carta de renuncia)','Así aseguras la bonificación del 25% por cada año completo de servicio.'],
+    ['l11','Firmo solo el acta de entrega y el acta de finiquito','No firmes declaraciones de conformidad con gestiones pasadas ni documentos de "descargo" redactados por la empresa.'],
+    ['l12','Reviso los valores del finiquito antes de firmar','El plazo para reclamar derechos laborales es de 3 años desde la terminación, pero es mejor no firmar valores erróneos.'],
+    ['l13','Pido baja formal de mis accesos y lo dejo documentado','Correo, ERP, consultas bancarias, sistemas. Así nada posterior se te atribuye.']
+  ]},
+  {g:'Si algún día una autoridad pregunta', items:[
+    ['l14','Nunca miento ni encubro ante una autoridad','Si te citan como testigo, debes decir la verdad. Callar o mentir sí podría comprometerte.'],
+    ['l15','Busco mi propio abogado, no el de la empresa','Sus intereses pueden no coincidir con los tuyos.'],
+    ['l16','Mi registro de observaciones me respalda','Demuestra que advertiste, que no decidías y que no participaste.']
+  ]}
+];
+
+const ESTADOS = ['Identificado','Contactado','Postulado / propuesta','Entrevista / reunión','Oferta','Ganado','Descartado'];
+const TIPOS = ['Empleo','Consultoría','Contacto'];
+const AREAS = ['Tributario','Societario','Financiero / contable','Laboral','Bancario','Otro'];
+
+function today(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+
+const BASE_DEF = {sbu:482, pctDesahucio:25, diasPreaviso:15, vacBase:15, vacAdicDesde:5, vacAdicMax:15, baseDias:365, fechaUtilidades:'2027-04-15', ajustePreaviso:3};
+const NUM_SET = ['sbu','pctDesahucio','diasPreaviso','vacBase','vacAdicDesde','vacAdicMax','baseDias','ajustePreaviso'];
+function aniosServicio(){ const i=pd(S.settings.fechaIngreso); return i?fullYears(i,pd(today())):0; }
+function defaultState(){
+  return {
+    v:1,
+    settings:Object.assign({nombre:'', fechaMeta:'2027-03-31', fechaIngreso:'2014-11-01', region:'sierra', decision:'2027-03-01'}, BASE_DEF),
+    tasks:defaultTasks(),
+    legal:{},
+    fin:{sueldo:2000, vacPend:0, d13mens:false, d14mens:false, utilidades:0, gastos:0, ahorro:0, aporte:0, cesantia:0, otros:0, metaMeses:9, clientesMeta:2},
+    registro:[], busqueda:[], bienestar:[],
+    open:{0:true,1:true,2:false,3:false}
+  };
+}
+
+/* =========================================================
+   ALMACENAMIENTO (con cifrado opcional AES-GCM)
+   ========================================================= */
+let S = null, CRYPTO_KEY = null, CRYPTO_SALT = null, TAB = 'inicio';
+const b64 = buf => btoa(String.fromCharCode(...new Uint8Array(buf)));
+const unb64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+async function deriveKey(pass, salt){
+  const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(pass), 'PBKDF2', false, ['deriveKey']);
+  return crypto.subtle.deriveKey({name:'PBKDF2', salt, iterations:250000, hash:'SHA-256'}, base, {name:'AES-GCM', length:256}, false, ['encrypt','decrypt']);
+}
+async function encryptState(){
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const ct = await crypto.subtle.encrypt({name:'AES-GCM', iv}, CRYPTO_KEY, new TextEncoder().encode(JSON.stringify(S)));
+  return JSON.stringify({salt:b64(CRYPTO_SALT), iv:b64(iv), ct:b64(ct)});
+}
+let saveTimer = null;
+function save(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(async ()=>{
+    try{
+      if(CRYPTO_KEY){ localStorage.setItem(STORE_ENC, await encryptState()); localStorage.removeItem(STORE_PLAIN); }
+      else { localStorage.setItem(STORE_PLAIN, JSON.stringify(S)); localStorage.removeItem(STORE_ENC); }
+    }catch(e){ toast('No se pudo guardar: '+e.message); }
+  },150);
+}
+function migrate(st){
+  const d = defaultState();
+  st.settings = Object.assign(d.settings, st.settings||{});
+  if(st.settings.fechaIngreso==='2016-11-01') st.settings.fechaIngreso='2014-11-01';
+  st.fin = Object.assign(d.fin, st.fin||{});
+  ['registro','busqueda','bienestar'].forEach(k=>{ if(!Array.isArray(st[k])) st[k]=[]; });
+  if(!Array.isArray(st.tasks)) st.tasks = d.tasks;
+  st.legal = st.legal||{}; st.open = st.open||d.open;
+  return st;
+}
+async function boot(){
+  const enc = localStorage.getItem(STORE_ENC);
+  if(enc){ document.getElementById('lock').style.display='flex'; document.getElementById('lockPass').focus(); return; }
+  try{ const raw = localStorage.getItem(STORE_PLAIN); S = raw ? migrate(JSON.parse(raw)) : defaultState(); }
+  catch(e){ S = defaultState(); }
+  if(!localStorage.getItem(STORE_PLAIN)) save();
+  start();
+}
+async function unlock(){
+  const pass = document.getElementById('lockPass').value;
+  const err = document.getElementById('lockErr');
+  if(!pass){ err.textContent='Ingresa tu clave.'; return; }
+  err.textContent='Verificando…';
+  try{
+    const o = JSON.parse(localStorage.getItem(STORE_ENC));
+    const salt = unb64(o.salt), key = await deriveKey(pass, salt);
+    const pt = await crypto.subtle.decrypt({name:'AES-GCM', iv:unb64(o.iv)}, key, unb64(o.ct));
+    S = migrate(JSON.parse(new TextDecoder().decode(pt)));
+    CRYPTO_KEY = key; CRYPTO_SALT = salt;
+    document.getElementById('lock').style.display='none';
+    document.getElementById('lockPass').value=''; err.textContent='';
+    start();
+  }catch(e){ err.textContent='Clave incorrecta.'; }
+}
+document.getElementById('lockBtn').onclick = unlock;
+document.getElementById('lockPass').addEventListener('keydown', e=>{ if(e.key==='Enter') unlock(); });
+document.getElementById('lockReset').onclick = ()=>{
+  if(confirm('Esto borrará definitivamente los datos cifrados de este navegador. ¿Continuar?')){
+    localStorage.removeItem(STORE_ENC); localStorage.removeItem(STORE_PLAIN); location.reload();
+  }
+};
+document.getElementById('hdrLock').onclick = ()=>{ CRYPTO_KEY=null; S=null; location.reload(); };
+
+/* =========================================================
+   UTILIDADES
+   ========================================================= */
+const $ = s => document.querySelector(s);
+const esc = s => String(s??'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money = n => '$ '+(Number(n)||0).toLocaleString('es-EC',{minimumFractionDigits:2,maximumFractionDigits:2});
+const pd = s => { if(!s) return null; const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); };
+const iso = d => d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const dayDiff = (a,b) => Math.round((b-a)/86400000);
+const fmtD = s => { const d=pd(s); return d ? d.toLocaleDateString('es-EC',{day:'2-digit',month:'short',year:'numeric'}) : '—'; };
+const addDays = (d,n) => { const x=new Date(d); x.setDate(x.getDate()+n); return x; };
+function fullYears(a,b){ let y=b.getFullYear()-a.getFullYear(); const an=new Date(a); an.setFullYear(a.getFullYear()+y); if(an>b) y--; return Math.max(0,y); }
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),2200); }
+const pct = (a,b) => b ? Math.round(a*100/b) : 0;
+
+/* =========================================================
+   CÁLCULOS
+   ========================================================= */
+function calcLiq(){
+  const f=S.fin, st=S.settings, s=+f.sueldo||0;
+  const ing=pd(st.fechaIngreso), sal=pd(st.fechaMeta);
+  if(!ing||!sal||sal<ing) return null;
+  const anios = fullYears(ing,sal);
+  const bd = +st.baseDias||365;
+  const desahucio = (+st.pctDesahucio||0)/100*s*anios;
+  // Décimo tercero: período 1 dic – 30 nov
+  let s13 = new Date(sal.getMonth()===11 ? sal.getFullYear() : sal.getFullYear()-1, 11, 1); if(s13<ing) s13=ing;
+  const d13dias = dayDiff(s13,sal)+1;
+  const d13 = f.d13mens ? 0 : s*d13dias/bd;
+  // Décimo cuarto: Sierra/Amazonía 1 ago – 31 jul; Costa/Galápagos 1 mar – fin feb
+  const m0 = st.region==='costa' ? 2 : 7;
+  let s14 = new Date(sal.getMonth()>=m0 ? sal.getFullYear() : sal.getFullYear()-1, m0, 1); if(s14<ing) s14=ing;
+  const d14dias = dayDiff(s14,sal)+1;
+  const d14 = f.d14mens ? 0 : (+st.sbu||0)*d14dias/bd;
+  // Vacaciones: 15 días + 1 adicional por cada año desde el sexto (máx. 15 adicionales)
+  const diasDerecho = (+st.vacBase||0) + Math.min(+st.vacAdicMax||0, Math.max(0, anios-(+st.vacAdicDesde||0)));
+  const ultAniv = new Date(ing); ultAniv.setFullYear(ing.getFullYear()+anios);
+  const vacPropDias = Math.max(0,dayDiff(ultAniv,sal))/bd*diasDerecho;
+  const vacProp = vacPropDias*s/30;
+  const vacPend = (+f.vacPend||0)*s/30;
+  const util = +f.utilidades||0;
+  const sinDes = d13+d14+vacProp+vacPend+util;
+  return {anios, desahucio, d13, d13dias, d14, d14dias, diasDerecho, vacProp, vacPropDias, vacPend, util, total:sinDes+desahucio, sinDes, s13, s14};
+}
+function calcColchon(){
+  const f=S.fin, L=calcLiq();
+  const meses = Math.max(0, dayDiff(pd(today()), pd(S.settings.fechaMeta))/30.44);
+  const aportes = (+f.aporte||0)*Math.floor(meses);
+  const liq = L ? L.total : 0;
+  const total = (+f.ahorro||0) + aportes + liq + (+f.cesantia||0) + (+f.otros||0);
+  const g = +f.gastos||0;
+  return {meses, aportes, liq, total, cobertura: g ? total/g : 0, meta:+f.metaMeses||9, necesario: g*(+f.metaMeses||9)};
+}
+function progress(fase){
+  const ts = fase===undefined ? S.tasks : S.tasks.filter(t=>t.fase===fase);
+  const d = ts.filter(t=>t.done).length; return {d, n:ts.length, p:pct(d,ts.length)};
+}
+function criterios(){
+  const C=calcColchon();
+  const oferta = S.busqueda.some(b=>b.tipo==='Empleo' && (b.estado==='Oferta'||b.estado==='Ganado'));
+  const clientes = S.busqueda.filter(b=>b.tipo==='Consultoría' && b.estado==='Ganado').length;
+  const colchon = S.fin.gastos>0 && C.cobertura>=C.meta;
+  return {oferta, clientes, clientesOk: clientes>=(+S.fin.clientesMeta||2), colchon, C};
+}
+
+/* =========================================================
+   RENDER PRINCIPAL
+   ========================================================= */
+function start(){
+  $('#hdrLock').style.display = CRYPTO_KEY ? 'inline-block' : 'none';
+  $('#hdrSub').textContent = (S.settings.nombre ? S.settings.nombre+' · ' : '') + 'Fecha meta: ' + fmtD(S.settings.fechaMeta);
+  $('#nav').innerHTML = TABS.map(([k,l])=>`<button data-tab="${k}" class="${k===TAB?'act':''}">${l}</button>`).join('');
+  render();
+}
+$('#nav').addEventListener('click', e=>{ const b=e.target.closest('button[data-tab]'); if(!b) return; TAB=b.dataset.tab; start(); window.scrollTo({top:0,behavior:'smooth'}); });
+function render(){ const fn = VIEWS[TAB]; $('#app').innerHTML = fn(); if(AFTER[TAB]) AFTER[TAB](); }
+
+const VIEWS = {}, AFTER = {};
+
+/* ---------- INICIO ---------- */
+VIEWS.inicio = () => {
+  const st=S.settings, P=progress(), L=calcLiq(), K=criterios(), C=K.C;
+  const dMeta = dayDiff(pd(today()), pd(st.fechaMeta));
+  const fNotif = addDays(pd(st.fechaMeta), -(+st.diasPreaviso||15));
+  const dNotif = dayDiff(pd(today()), fNotif);
+  const dDec = dayDiff(pd(today()), pd(st.decision));
+  const pend = S.tasks.filter(t=>!t.done).sort((a,b)=>(a.fecha||'9').localeCompare(b.fecha||'9')).slice(0,6);
+  const vencidas = S.tasks.filter(t=>!t.done && t.fecha && t.fecha<today()).length;
+  const activos = S.busqueda.filter(b=>!['Ganado','Descartado'].includes(b.estado)).length;
+  const lastW = S.bienestar.slice().sort((a,b)=>b.fecha.localeCompare(a.fecha))[0];
+  const legalOk = Object.values(S.legal).filter(Boolean).length, legalN = LEGAL.reduce((a,g)=>a+g.items.length,0);
+  const cobCls = !S.fin.gastos ? '' : C.cobertura>=C.meta ? 'ok' : C.cobertura>=C.meta*0.6 ? 'warn' : 'bad';
+  return `
+  <h2>Hola${st.nombre?', '+esc(st.nombre):''} 👋</h2>
+  <p class="sub">Cada paso cumplido es un paso más hacia un trabajo donde tu criterio cuente.</p>
+  <div class="grid g4">
+    <div class="card kpi"><div class="lbl">Días a la fecha meta</div><div class="val">${dMeta>=0?dMeta:'0'}</div><div class="hint">${fmtD(st.fechaMeta)}</div></div>
+    <div class="card kpi"><div class="lbl">Avance del plan</div><div class="val">${P.p}%</div><div class="bar ok"><i style="width:${P.p}%"></i></div><div class="hint">${P.d} de ${P.n} pasos${vencidas?` · <span style="color:var(--bad)">${vencidas} vencido(s)</span>`:''}</div></div>
+    <div class="card kpi"><div class="lbl">Colchón financiero</div><div class="val">${S.fin.gastos?C.cobertura.toFixed(1)+' m':'—'}</div><div class="bar ${cobCls}"><i style="width:${S.fin.gastos?Math.min(100,pct(C.cobertura,C.meta)):0}%"></i></div><div class="hint">${S.fin.gastos?`Meta: ${C.meta} meses`:'Ingresa tus gastos en Finanzas'}</div></div>
+    <div class="card kpi"><div class="lbl">Liquidación estimada</div><div class="val" style="font-size:23px">${L?money(L.total):'—'}</div><div class="hint">${L?`Incluye desahucio ${money(L.desahucio)} (${L.anios} años)`:'Revisa fechas en Ajustes'}</div></div>
+  </div>
+
+  <div class="grid g2 mt">
+    <div class="card">
+      <h3>Próximos pasos</h3>
+      ${pend.length ? pend.map(t=>{
+        const late = t.fecha && t.fecha<today();
+        return `<div class="chk"><input type="checkbox" data-act="tdone" data-id="${t.id}"><div style="flex:1"><div class="t">${esc(t.titulo)}</div><div class="meta"><span class="pill ${late?'bad':'gray'}">${late?'Vencido · ':''}${fmtD(t.fecha)}</span><span class="pill">Fase ${t.fase}</span></div></div></div>`;
+      }).join('') : '<div class="empty">🎉 No hay pasos pendientes.</div>'}
+      <div class="mt"><button class="btn sec sm" data-go="plan">Ver plan completo →</button></div>
+    </div>
+    <div class="card">
+      <h3>Criterios para el punto de decisión · ${fmtD(st.decision)}</h3>
+      <p class="small muted" style="margin-top:-6px">Sal cuando se cumpla al menos uno de los dos primeros, idealmente con el colchón completo.</p>
+      ${critRow(K.oferta,'Oferta de empleo confirmada', K.oferta?'Registrada en Búsqueda':'Aún no')}
+      ${critRow(K.clientesOk,`Clientes de consultoría ganados (meta ${S.fin.clientesMeta})`, `${K.clientes} ganado(s)`)}
+      ${critRow(K.colchon,`Colchón ≥ ${C.meta} meses de gastos`, S.fin.gastos?`${C.cobertura.toFixed(1)} meses`:'Faltan datos')}
+      <div class="note ${ (K.oferta||K.clientesOk)&&K.colchon ? 'ok' : (K.oferta||K.clientesOk||K.colchon) ? 'warn':'' }">
+        ${(K.oferta||K.clientesOk)&&K.colchon ? '✅ Condiciones favorables para salir en la fecha meta.' :
+          (K.oferta||K.clientesOk) ? '⚠️ Tienes opción de ingreso, pero refuerza el colchón.' :
+          K.colchon ? '⚠️ Colchón listo, pero sin ingreso asegurado: decide si sales y buscas a tiempo completo, o mueves la fecha meta.' :
+          `Faltan ${dDec>0?dDec+' días':'—'} para la decisión. Concéntrate en la Fase actual.`}
+      </div>
+    </div>
+  </div>
+
+  <div class="grid g3 mt">
+    <div class="card">
+      <h3>📅 Fechas clave</h3>
+      <table>
+        <tr><td>Punto de decisión</td><td class="num">${fmtD(st.decision)}</td></tr>
+        <tr><td><b>Límite para notificar desahucio</b></td><td class="num"><b>${fmtD(iso(fNotif))}</b></td></tr>
+        <tr><td>Último día (fecha meta)</td><td class="num">${fmtD(st.fechaMeta)}</td></tr>
+        <tr><td>Pago utilidades 2026</td><td class="num">${fmtD(st.fechaUtilidades)}</td></tr>
+      </table>
+      <p class="small muted">${dNotif>0?`Faltan ${dNotif} días para el límite de notificación. Recomendado: notificar ${st.ajustePreaviso} días antes del límite (${fmtD(iso(addDays(fNotif,-(+st.ajustePreaviso||0))))}).`:'Ya pasó la fecha límite de notificación para esta fecha meta.'}</p>
+    </div>
+    <div class="card">
+      <h3>🛡️ Protección legal</h3>
+      <div class="kpi"><div class="val">${legalOk}/${legalN}</div></div>
+      <div class="bar ok"><i style="width:${pct(legalOk,legalN)}%"></i></div>
+      <p class="small muted">Prácticas que ya aplicas. Tu exposición formal es baja: sin nombramiento, sin firma registrada y sin firma ni claves bancarias.</p>
+      <button class="btn sec sm" data-go="legal">Revisar recomendaciones →</button>
+    </div>
+    <div class="card">
+      <h3>🔎 Búsqueda y bienestar</h3>
+      <table>
+        <tr><td>Oportunidades activas</td><td class="num">${activos}</td></tr>
+        <tr><td>Observaciones registradas</td><td class="num">${S.registro.length}</td></tr>
+        <tr><td>Último nivel de estrés</td><td class="num">${lastW?lastW.estres+'/10 · '+fmtD(lastW.fecha):'—'}</td></tr>
+      </table>
+      <div class="row mt"><button class="btn sec sm" data-go="busqueda">Búsqueda →</button><button class="btn ghost sm" data-go="bienestar">Check-in semanal</button></div>
+    </div>
+  </div>
+
+  <div class="card mt">
+    <h3>Avance por fase</h3>
+    ${FASES.map(f=>{const p=progress(f.n);return `<div class="mb"><div class="row"><b>Fase ${f.n} · ${f.t}</b><span class="sp"></span><span class="small muted">${p.d}/${p.n} · ${f.per}</span></div><div class="bar ${p.p===100?'ok':''}"><i style="width:${p.p}%"></i></div></div>`;}).join('')}
+  </div>`;
+};
+function critRow(ok,t,h){ return `<div class="crit"><span class="dot" style="background:${ok?'var(--ok)':'#c3ccd6'}">${ok?'✓':'·'}</span><div style="flex:1"><b>${t}</b><div class="small muted">${h}</div></div></div>`; }
+
+/* ---------- PLAN ---------- */
+VIEWS.plan = () => `
+  <div class="row"><div><h2>Plan por fases</h2><p class="sub">Marca cada paso al cumplirlo. Puedes cambiar fechas, agregar notas y crear pasos propios.</p></div><span class="sp"></span>
+  <button class="btn" data-act="taddnew">+ Agregar paso</button></div>
+  ${FASES.map(f=>{
+    const p=progress(f.n), open=S.open[f.n];
+    const ts=S.tasks.filter(t=>t.fase===f.n).sort((a,b)=>(a.done-b.done)||(a.fecha||'').localeCompare(b.fecha||''));
+    return `<div class="card phase">
+      <div class="phase-h" data-act="ptoggle" data-f="${f.n}">
+        <div class="num ${p.p===100?'ok':''}">${p.p===100?'✓':f.n}</div>
+        <div style="flex:1"><h3>${f.t}</h3><div class="per">${f.per} · ${p.d}/${p.n} cumplidos</div></div>
+        <span class="muted">${open?'▾':'▸'}</span>
+      </div>
+      <div class="bar ${p.p===100?'ok':''}"><i style="width:${p.p}%"></i></div>
+      ${open?`<div class="phase-b"><p class="small muted" style="margin:0 0 6px"><b>Objetivo:</b> ${f.obj}</p>
+        ${ts.map(t=>taskRow(t)).join('')}</div>`:''}
+    </div>`;}).join('')}`;
+function taskRow(t){
+  const late = !t.done && t.fecha && t.fecha<today();
+  return `<div class="chk ${t.done?'done':''}">
+    <input type="checkbox" data-act="tdone" data-id="${t.id}" ${t.done?'checked':''}>
+    <div style="flex:1;min-width:0">
+      <div class="t">${esc(t.titulo)}</div>
+      ${t.detalle?`<div class="d">${esc(t.detalle)}</div>`:''}
+      ${t.nota?`<div class="d" style="color:var(--ink)">📝 ${esc(t.nota)}</div>`:''}
+      <div class="meta">
+        <input type="date" value="${esc(t.fecha)}" data-act="tdate" data-id="${t.id}">
+        ${late?'<span class="pill bad">Vencido</span>':''}
+        ${t.done&&t.doneAt?`<span class="pill ok">Cumplido ${fmtD(t.doneAt)}</span>`:''}
+        <button class="lnk" data-act="tedit" data-id="${t.id}">Editar / nota</button>
+        ${t.custom?`<button class="lnk" style="color:var(--bad)" data-act="tdel" data-id="${t.id}">Eliminar</button>`:''}
+      </div>
+    </div></div>`;
+}
+
+/* ---------- FINANZAS ---------- */
+VIEWS.finanzas = () => {
+  const f=S.fin, st=S.settings, L=calcLiq(), C=calcColchon();
+  const inp=(k,l,step='0.01',extra='')=>`<div><label>${l}</label><input type="number" min="0" step="${step}" data-fin="${k}" value="${esc(f[k])}" ${extra}></div>`;
+  return `
+  <h2>Finanzas de la transición</h2>
+  <p class="sub">Cálculo referencial según el Código del Trabajo. Valida los valores con la calculadora del Ministerio del Trabajo y con un abogado laboral.</p>
+  <div class="grid g2">
+    <div class="card">
+      <h3>1 · Datos para la liquidación</h3>
+      <div class="fgrid">
+        ${inp('sueldo','Última remuneración mensual ($)')}
+        <div><label>Fecha de ingreso</label><input type="date" data-set="fechaIngreso" value="${esc(st.fechaIngreso)}"></div>
+        <div><label>Último día (fecha meta)</label><input type="date" data-set="fechaMeta" value="${esc(st.fechaMeta)}"></div>
+        ${inp('vacPend','Días de vacaciones pendientes de períodos anteriores','1')}
+        <div><label>Región (décimo cuarto)</label><select data-set="region"><option value="sierra" ${st.region==='sierra'?'selected':''}>Sierra / Amazonía</option><option value="costa" ${st.region==='costa'?'selected':''}>Costa / Galápagos</option></select></div>
+        <div><label>Salario básico unificado vigente ($)</label><input type="number" step="0.01" data-set="sbu" value="${esc(st.sbu)}"></div>
+        ${inp('utilidades','Utilidades 2026 estimadas ($)')}
+      </div>
+      <div class="row mt small">
+        <label style="display:flex;gap:6px;align-items:center;margin:0"><input type="checkbox" style="width:auto" data-finb="d13mens" ${f.d13mens?'checked':''}> Cobro el décimo tercero mensualizado</label>
+        <label style="display:flex;gap:6px;align-items:center;margin:0"><input type="checkbox" style="width:auto" data-finb="d14mens" ${f.d14mens?'checked':''}> Cobro el décimo cuarto mensualizado</label>
+      </div>
+      <p class="small muted">El SBU de 2027 se fija en diciembre; actualízalo cuando se publique.</p>
+    </div>
+    <div class="card">
+      <h3>2 · Liquidación estimada</h3>
+      ${L?`<div class="tblwrap"><table>
+        <tr><th>Concepto</th><th>Base</th><th class="num">Valor</th></tr>
+        <tr><td><b>Bonificación por desahucio</b><div class="small muted">Art. 185 · ${st.pctDesahucio}% × remuneración × años completos</div></td><td class="small">${L.anios} años</td><td class="num"><b>${money(L.desahucio)}</b></td></tr>
+        <tr><td>Décimo tercero proporcional</td><td class="small">${f.d13mens?'Mensualizado':L.d13dias+' días desde '+fmtD(iso(L.s13))}</td><td class="num">${money(L.d13)}</td></tr>
+        <tr><td>Décimo cuarto proporcional</td><td class="small">${f.d14mens?'Mensualizado':L.d14dias+' días desde '+fmtD(iso(L.s14))}</td><td class="num">${money(L.d14)}</td></tr>
+        <tr><td>Vacaciones proporcionales del período</td><td class="small">${L.vacPropDias.toFixed(1)} de ${L.diasDerecho} días/año</td><td class="num">${money(L.vacProp)}</td></tr>
+        <tr><td>Vacaciones pendientes</td><td class="small">${f.vacPend||0} días</td><td class="num">${money(L.vacPend)}</td></tr>
+        <tr><td>Utilidades 2026</td><td class="small">Hasta ${fmtD(st.fechaUtilidades)}</td><td class="num">${money(L.util)}</td></tr>
+        <tr class="tot"><td>Total estimado</td><td></td><td class="num">${money(L.total)}</td></tr>
+      </table></div>
+      <div class="note ok small">Salir por <b>desahucio</b> en el SUT significa <b>${money(L.desahucio)}</b> que podrías perder con una carta de renuncia mal formalizada.</div>
+      <p class="small muted">No incluye: días trabajados del último mes (van en el rol), fondos de reserva (si se depositan al IESS o se pagan mensualmente), ni descuentos de préstamos o anticipos.</p>`
+      :'<div class="note warn">Revisa la fecha de ingreso y la fecha meta.</div>'}
+    </div>
+  </div>
+
+  <div class="grid g2 mt">
+    <div class="card">
+      <h3>3 · Tu colchón</h3>
+      <div class="fgrid">
+        ${inp('gastos','Gastos esenciales por mes ($)')}
+        ${inp('ahorro','Ahorro disponible hoy ($)')}
+        ${inp('aporte','Ahorro mensual hasta la salida ($)')}
+        ${inp('cesantia','Fondo de cesantía IESS ($)')}
+        ${inp('otros','Otros recursos líquidos ($)')}
+        ${inp('metaMeses','Meta de cobertura (meses)','1')}
+        ${inp('clientesMeta','Meta de clientes de consultoría','1')}
+      </div>
+    </div>
+    <div class="card">
+      <h3>4 · ¿Cuánto tiempo estás cubierto?</h3>
+      <table>
+        <tr><td>Ahorro actual</td><td class="num">${money(f.ahorro)}</td></tr>
+        <tr><td>Ahorro hasta la salida (${Math.floor(C.meses)} meses × ${money(f.aporte)})</td><td class="num">${money(C.aportes)}</td></tr>
+        <tr><td>Liquidación estimada</td><td class="num">${money(C.liq)}</td></tr>
+        <tr><td>Fondo de cesantía + otros</td><td class="num">${money((+f.cesantia||0)+(+f.otros||0))}</td></tr>
+        <tr class="tot"><td>Recursos totales a la salida</td><td class="num">${money(C.total)}</td></tr>
+      </table>
+      ${f.gastos>0?`
+        <div class="kpi mt"><div class="lbl">Cobertura</div><div class="val">${C.cobertura.toFixed(1)} meses</div></div>
+        <div class="bar ${C.cobertura>=C.meta?'ok':C.cobertura>=C.meta*.6?'warn':'bad'}"><i style="width:${Math.min(100,pct(C.cobertura,C.meta))}%"></i></div>
+        <p class="small">${C.cobertura>=C.meta?'✅ Alcanzas tu meta de cobertura.':`Te faltan <b>${money(C.necesario-C.total)}</b> para cubrir ${C.meta} meses (≈ ${money((C.necesario-C.total)/Math.max(1,Math.floor(C.meses)))} adicionales por mes hasta la salida).`}</p>`
+      :'<div class="note">Ingresa tus gastos mensuales esenciales para ver tu cobertura.</div>'}
+      <div class="note warn small"><b>Importante:</b> el seguro de desempleo del IESS no se concede a quien cesa por renuncia, abandono voluntario o desahucio. Planifica sin contar con él.</div>
+    </div>
+  </div>`;
+};
+
+/* ---------- LEGAL ---------- */
+VIEWS.legal = () => `
+  <h2>Protección legal</h2>
+  <p class="sub">Recomendaciones para salir tranquilo y no tener problemas a futuro. Marca las que ya aplicas.</p>
+  <div class="card">
+    <h3>Tu situación hoy</h3>
+    <div class="grid g4">
+      ${['Sin nombramiento inscrito','Sin firma en SCVS ni SRI','Sin firma de cheques ni claves bancarias','No firmas balances ni informes'].map(x=>`<div class="row"><span class="pill ok">✓</span><span class="small">${x}</span></div>`).join('')}
+    </div>
+    <div class="note ok mt">Tu exposición <b>formal</b> es baja: no eres representante legal ni administrador registrado, y no decides ni ejecutas pagos. El riesgo que queda es práctico y se controla con lo de abajo: que nadie pueda decir que <i>aprobaste</i>, <i>participaste</i> u <i>ocultaste</i>.</div>
+  </div>
+
+  <div class="card mt">
+    <h3>Sobre lo que conoces y no compartes</h3>
+    <p>Respetar tu decisión de no denunciar es legítimo. En Ecuador, para un particular, denunciar es por regla general una facultad, no una obligación; los deberes específicos recaen sobre ciertos funcionarios y profesionales. Lo que sí importa es la diferencia entre <b>conocer</b> y <b>participar</b>:</p>
+    <div class="rule"><div class="ic ok">✓</div><div><b>Puedes</b><p>Guardar silencio frente a terceros, salir discretamente, conservar tus propias notas y correos de objeción, y no volver a hablar del tema.</p></div></div>
+    <div class="rule"><div class="ic bad">✕</div><div><b>No debes</b><p>Ejecutar, preparar o "maquillar" documentos incorrectos; ocultar o destruir información; ni mentir si una autoridad te pregunta formalmente.</p></div></div>
+    <div class="rule"><div class="ic">!</div><div><b>Si tu situación cambia</b><p>Si te citan como testigo, te piden algo claramente ilegal o recibes una notificación, consulta de inmediato con tu propio abogado de confianza antes de responder.</p></div></div>
+  </div>
+
+  ${LEGAL.map(g=>`<div class="card mt"><h3>${g.g}</h3>
+    ${g.items.map(([id,t,d])=>`<div class="chk ${S.legal[id]?'done':''}" style="${S.legal[id]?'':''}"><input type="checkbox" data-act="lchk" data-id="${id}" ${S.legal[id]?'checked':''}><div><div class="t" style="text-decoration:none;${S.legal[id]?'color:var(--ok)':''}">${t}</div><div class="d">${d}</div></div></div>`).join('')}
+  </div>`).join('')}
+
+  <details class="card mt"><summary>¿Qué significa tu sumilla en "Revisado"?</summary>
+    <div class="mt">
+    <table>
+      <tr><th>Casilla</th><th>Qué certifica</th><th>Quién responde</th></tr>
+      <tr><td>Elaborado</td><td>Quién preparó el comprobante</td><td>Asistente / contabilidad</td></tr>
+      <tr><td><b>Revisado</b></td><td>Soporte completo (factura, retención), cálculos y registro contable correctos</td><td><b>Tú: la forma y el soporte</b></td></tr>
+      <tr><td>Aprobado</td><td>Que el gasto se autoriza y es pertinente</td><td>Dueños / gerente general</td></tr>
+      <tr><td>Recibido</td><td>Que el beneficiario recibió el pago</td><td>Beneficiario</td></tr>
+    </table>
+    <p class="small muted">Regla práctica: si el soporte está incompleto o la operación te parece irregular, no sumilles sin dejar una observación escrita.</p></div>
+  </details>
+  <p class="small muted mt">Esta guía es orientativa y no reemplaza la asesoría de un abogado.</p>`;
+
+/* ---------- REGISTRO ---------- */
+VIEWS.registro = () => `
+  <div class="row"><div><h2>Registro de observaciones</h2><p class="sub">Tu respaldo personal: lo que advertiste, cuándo y a quién. Solo hechos.</p></div><span class="sp"></span><button class="btn" data-act="radd">+ Nueva observación</button></div>
+  <div class="note warn small"><b>Cómo escribir aquí:</b> hechos verificables (fecha, nº de comprobante o documento, norma involucrada, a quién comunicaste y referencia del correo). Sin acusaciones, sin adjetivos, sin copiar documentos de la empresa. Si activas una clave en Ajustes, este registro se guarda cifrado.</div>
+  <div class="card">
+  ${S.registro.length?`<div class="tblwrap"><table>
+    <tr><th>Fecha</th><th>Área</th><th>Observación</th><th>Comunicado a</th><th>Referencia</th><th></th></tr>
+    ${S.registro.slice().sort((a,b)=>b.fecha.localeCompare(a.fecha)).map(r=>`<tr>
+      <td style="white-space:nowrap">${fmtD(r.fecha)}</td><td><span class="pill gray">${esc(r.area)}</span></td>
+      <td>${esc(r.desc)}${r.respuesta?`<div class="small muted">Respuesta: ${esc(r.respuesta)}</div>`:''}</td>
+      <td>${r.comunicado==='si'?esc(r.aquien)+'<div class="small muted">'+esc(r.medio)+'</div>':'<span class="pill warn">No comunicado</span>'}</td>
+      <td class="small">${esc(r.ref)}</td>
+      <td style="white-space:nowrap"><button class="btn ghost sm" data-act="redit" data-id="${r.id}">Editar</button> <button class="btn dan sm" data-act="rdel" data-id="${r.id}">✕</button></td></tr>`).join('')}
+  </table></div>`:'<div class="empty">Aún no hay observaciones registradas.</div>'}
+  </div>
+  <div class="row mt noprint"><button class="btn sec sm" onclick="window.print()">Imprimir registro</button></div>`;
+
+/* ---------- BÚSQUEDA ---------- */
+VIEWS.busqueda = () => {
+  const by = e => S.busqueda.filter(b=>b.estado===e).length;
+  return `
+  <div class="row"><div><h2>Búsqueda: empleo y consultoría</h2><p class="sub">Tu embudo de oportunidades. Lo que no se registra, no se le da seguimiento.</p></div><span class="sp"></span><button class="btn" data-act="badd">+ Nueva oportunidad</button></div>
+  <div class="grid g4 mb">
+    ${TIPOS.map(t=>`<div class="card kpi"><div class="lbl">${t}</div><div class="val">${S.busqueda.filter(b=>b.tipo===t&&b.estado!=='Descartado').length}</div><div class="hint">activas</div></div>`).join('')}
+    <div class="card kpi"><div class="lbl">Ofertas / ganadas</div><div class="val">${by('Oferta')+by('Ganado')}</div></div>
+  </div>
+  <div class="card">
+  ${S.busqueda.length?`<div class="tblwrap"><table>
+    <tr><th>Tipo</th><th>Organización / persona</th><th>Cargo o servicio</th><th>Estado</th><th>Próxima acción</th><th></th></tr>
+    ${S.busqueda.slice().sort((a,b)=>ESTADOS.indexOf(a.estado)-ESTADOS.indexOf(b.estado)||(a.fecha||'').localeCompare(b.fecha||'')).map(b=>{
+      const late=b.fecha&&b.fecha<today()&&!['Ganado','Descartado'].includes(b.estado);
+      const cls={'Oferta':'ok','Ganado':'ok','Descartado':'gray','Entrevista / reunión':'warn'}[b.estado]||'';
+      return `<tr><td><span class="pill gray">${esc(b.tipo)}</span></td><td><b>${esc(b.org)}</b>${b.contacto?`<div class="small muted">${esc(b.contacto)}</div>`:''}</td><td>${esc(b.cargo)}</td>
+      <td><span class="pill ${cls}">${esc(b.estado)}</span></td>
+      <td>${esc(b.accion)}${b.fecha?`<div class="small ${late?'':'muted'}" style="${late?'color:var(--bad)':''}">${fmtD(b.fecha)}</div>`:''}</td>
+      <td style="white-space:nowrap"><button class="btn ghost sm" data-act="bedit" data-id="${b.id}">Editar</button> <button class="btn dan sm" data-act="bdel" data-id="${b.id}">✕</button></td></tr>`;}).join('')}
+  </table></div>`:'<div class="empty">Registra tu primera oportunidad o contacto.</div>'}
+  </div>
+  <div class="grid g2 mt">
+    <div class="card"><h3>Dónde buscar</h3><ul class="small" style="margin:0;padding-left:18px">
+      <li>Tu red directa: es la vía más efectiva en un mercado difícil.</li>
+      <li>Firmas de auditoría y consultoras tributarias (cargos de gerente, senior, controller).</li>
+      <li>Grupos empresariales con varias compañías: valoran experiencia en cumplimiento societario.</li>
+      <li>Cámaras de comercio, colegios de contadores y gremios: eventos y bolsas de empleo.</li>
+      <li>LinkedIn: publica contenido técnico breve (cambios tributarios, plazos SCVS).</li></ul></div>
+    <div class="card"><h3>Ideas de servicios de consultoría</h3><ul class="small" style="margin:0;padding-left:18px">
+      <li>Diagnóstico de cumplimiento tributario y societario para pymes.</li>
+      <li>Respuesta a oficios y requerimientos de la SCVS y del SRI.</li>
+      <li>Planificación tributaria legal (IR, IVA, participación trabajadores).</li>
+      <li>Control documental y calendario de obligaciones.</li>
+      <li>Gerencia financiera a tiempo parcial para pymes.</li></ul></div>
+  </div>`;
+};
+
+/* ---------- PLANTILLAS ---------- */
+const TPL = [
+ ['Correo: alcance de tu sumilla "Revisado"',`Asunto: Alcance de la revisión de comprobantes de egreso
+
+Estimados:
+
+Para claridad del proceso de control interno, les comento que mi sumilla en la casilla "Revisado" de los comprobantes de egreso certifica la verificación del soporte documental (factura, comprobante de retención, cálculos) y su correcto registro contable.
+
+La autorización y pertinencia del gasto corresponden a quien suscribe la casilla "Aprobado".
+
+Cuando un comprobante tenga soporte incompleto, lo devolveré con la observación respectiva para su regularización.
+
+Saludos cordiales,
+[Nombre]`],
+ ['Memorando de observación técnica',`Para: [Nombre / cargo]
+De: [Nombre], [cargo]
+Fecha: [fecha]
+Asunto: Observación técnica sobre [tema]
+
+1. Antecedente
+[Describe el hecho de forma objetiva: documento, número, fecha, monto.]
+
+2. Observación
+[Qué norma o principio podría no estar cumpliéndose. Ej.: Ley de Régimen Tributario Interno, art. __; NIIF __; Ley de Compañías, art. __.]
+
+3. Riesgo
+[Posibles consecuencias: glosa, multa, intereses, observación de auditoría, requerimiento de la Superintendencia.]
+
+4. Recomendación
+[Qué sugieres hacer para regularizar.]
+
+Quedo a disposición para ampliar lo que consideren necesario.
+
+[Nombre]`],
+ ['Respuesta ante un pedido indebido',`Estimado/a [nombre]:
+
+Gracias por la indicación. Con respecto a [describir el pedido], no me es posible realizarlo, porque [motivo técnico breve: falta de soporte / contradice la norma __ / modifica la fecha de un documento ya emitido].
+
+Como alternativa sugiero [alternativa correcta, si existe].
+
+Saludos cordiales,
+[Nombre]`],
+ ['Conversación personal con los dueños (guion)',`• Agradecer: "Quiero agradecerles por estos {{A}} años de confianza y por todo lo que aprendí aquí."
+• Comunicar la decisión: "He decidido dar un paso profesional distinto. Mi último día será el [fecha]."
+• Sin reproches: no expliques diferencias de criterio; ya quedaron dichas en su momento.
+• Ofrecer una transición ordenada: "Voy a dejar documentados los procesos y entregar todo con acta para que la transición sea sencilla."
+• Formalidad: "Haré la notificación formal en el sistema del Ministerio del Trabajo, como corresponde."
+• Cerrar con respeto: "Les deseo lo mejor a ustedes y a las empresas."`],
+ ['Estructura del acta de entrega',`ACTA DE ENTREGA-RECEPCIÓN DE FUNCIONES
+
+Lugar y fecha: [ciudad], [fecha]
+Entrega: [Nombre], [cargo]
+Recibe: [Nombre], [cargo]
+
+1. Funciones y procesos a cargo (adjuntar manual de procesos).
+2. Estado de actividades en curso y pendientes (con fechas y responsables).
+3. Calendario de obligaciones próximas (SRI, Superintendencia de Compañías, IESS, municipio).
+4. Archivo físico y digital entregado (ubicación y descripción general).
+5. Accesos y credenciales: listado de sistemas a dar de baja o transferir (sin escribir claves en el acta).
+6. Activos entregados: equipo, llaves, tarjetas, otros.
+7. Observaciones comunicadas oportunamente: "Se deja constancia de que las observaciones técnicas fueron comunicadas en su momento por los medios internos correspondientes."
+
+Firma de quien entrega / Firma de quien recibe`],
+ ['Guion de entrevista: ¿por qué dejas tu trabajo?',`"Estuve {{A}} años en un grupo empresarial donde aprendí muchísimo sobre cumplimiento tributario, societario y control financiero. Llegué a un punto en el que busco un rol con mayor alcance en la toma de decisiones y en el gobierno corporativo, donde pueda aportar con criterio técnico desde la planificación y no solo desde la revisión. Por eso estoy buscando una organización que valore ese enfoque."
+
+Evita: críticas a tus jefes, detalles internos, la palabra "corrupción", quejas sobre balances.`],
+ ['Mensaje a contactos (networking)',`Hola [nombre], ¿cómo estás? Hace tiempo que no conversamos.
+
+Estoy evaluando mi siguiente paso profesional en el área financiera y de cumplimiento tributario-societario, y me encantaría conocer tu visión del mercado. ¿Tendrías 20 minutos para un café o una llamada en las próximas semanas?
+
+Un abrazo,
+[Nombre]`],
+ ['Presentación breve de consultoría',`[Nombre] · Consultoría financiera, tributaria y societaria
+
+Ayudo a pymes y grupos empresariales a cumplir sin sobresaltos con el SRI y la Superintendencia de Compañías:
+• Diagnóstico de cumplimiento y matriz de riesgos.
+• Respuesta a oficios y requerimientos.
+• Planificación tributaria legal.
+• Calendario de obligaciones y control documental.
+
+Más de {{A}} años de experiencia en gerencia financiera de grupos empresariales.
+Contacto: [teléfono] · [correo]`],
+ ['Pasos para notificar el desahucio (SUT)',`1. Confirma la fecha de tu último día (fecha meta en esta app).
+2. Al menos 15 días antes, ingresa al Sistema Único de Trabajo (SUT) del Ministerio del Trabajo con tu usuario y registra el desahucio por parte del trabajador.
+3. Guarda el comprobante de la notificación.
+4. Comunica la decisión personalmente a los dueños (ver guion).
+5. Durante los 15 días: transición, acta de entrega, devolución de activos.
+6. El empleador registra el acta de finiquito en el SUT. Revisa cada valor antes de firmar: desahucio (25% × remuneración × años), décimos, vacaciones y utilidades.
+7. Si hay diferencias, no firmes y consulta con tu abogado laboral.
+
+Valida el procedimiento vigente en el SUT o con un abogado al momento de hacerlo.`]
+];
+const tplText = i => TPL[i][1].replace(/\{\{A\}\}/g, aniosServicio()||'[años]');
+VIEWS.plantillas = () => `
+  <h2>Plantillas</h2><p class="sub">Textos listos para adaptar. Pulsa "Copiar" y personaliza los campos entre corchetes.</p>
+  ${TPL.map(([t,x],i)=>`<details class="card mb" ${i===0?'open':''}><summary>${t}</summary><div class="mt"><div class="tpl">${esc(tplText(i))}</div><div class="mt"><button class="btn sm" data-act="copy" data-i="${i}">Copiar</button></div></div></details>`).join('')}`;
+
+/* ---------- BIENESTAR ---------- */
+VIEWS.bienestar = () => {
+  const L = S.bienestar.slice().sort((a,b)=>a.fecha.localeCompare(b.fecha));
+  return `
+  <div class="row"><div><h2>Bienestar</h2><p class="sub">Diez años de desgaste pesan. Un check-in semanal te ayuda a ver cómo avanzas también por dentro.</p></div><span class="sp"></span><button class="btn" data-act="wadd">+ Check-in de esta semana</button></div>
+  <div class="grid g2">
+    <div class="card"><h3>Tendencia</h3>${L.length>=2?spark(L):'<div class="empty">Registra al menos dos check-ins para ver la tendencia.</div>'}
+      <div class="row small"><span><span class="pill bad">■</span> Estrés</span><span><span class="pill ok">■</span> Energía</span></div></div>
+    <div class="card"><h3>Mientras sigues ahí</h3>
+      <div class="rule"><div class="ic">1</div><div><b>Lo que no decides no es tu responsabilidad</b><p>Tu tarea es advertir y dejar constancia; la decisión es de los dueños.</p></div></div>
+      <div class="rule"><div class="ic">2</div><div><b>Pon horario de salida</b><p>Desconéctate del correo laboral fuera de horario cuando sea posible.</p></div></div>
+      <div class="rule"><div class="ic">3</div><div><b>Elige tus batallas</b><p>Objeta lo importante por escrito una vez; no repitas discusiones que ya diste.</p></div></div>
+      <div class="rule"><div class="ic">4</div><div><b>Muévete y descansa</b><p>Actividad física y sueño son tu mejor defensa contra el estrés.</p></div></div>
+      <div class="rule"><div class="ic">5</div><div><b>Apóyate en tu gente</b><p>Comparte el plan con alguien de confianza; si el estrés se vuelve persistente, busca apoyo profesional.</p></div></div>
+    </div>
+  </div>
+  <div class="card mt">
+    ${L.length?`<div class="tblwrap"><table><tr><th>Fecha</th><th class="num">Estrés</th><th class="num">Energía</th><th>Nota</th><th></th></tr>
+    ${L.slice().reverse().map(w=>`<tr><td>${fmtD(w.fecha)}</td><td class="num">${w.estres}/10</td><td class="num">${w.energia}/10</td><td>${esc(w.nota)}</td><td><button class="btn dan sm" data-act="wdel" data-id="${w.id}">✕</button></td></tr>`).join('')}</table></div>`:'<div class="empty">Sin registros todavía.</div>'}
+  </div>`;
+};
+function spark(L){
+  const W=600,H=120,p=10, n=L.length, x=i=>p+i*(W-2*p)/(n-1), y=v=>H-p-(v/10)*(H-2*p);
+  const line=k=>L.map((w,i)=>(i?'L':'M')+x(i).toFixed(1)+' '+y(+w[k]).toFixed(1)).join(' ');
+  return `<svg class="spark" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+    ${[0,5,10].map(v=>`<line x1="0" x2="${W}" y1="${y(v)}" y2="${y(v)}" stroke="#e2e7ed" stroke-width="1"/>`).join('')}
+    <path d="${line('estres')}" fill="none" stroke="#c0392b" stroke-width="2.5" vector-effect="non-scaling-stroke"/>
+    <path d="${line('energia')}" fill="none" stroke="#1e8a5a" stroke-width="2.5" vector-effect="non-scaling-stroke"/></svg>`;
+}
+
+/* ---------- AJUSTES ---------- */
+VIEWS.ajustes = () => {
+  const st=S.settings;
+  return `
+  <h2>Ajustes</h2><p class="sub">Fechas del plan, privacidad y respaldos.</p>
+  <div class="grid g2">
+    <div class="card"><h3>Plan</h3>
+      <div class="fgrid">
+        <div><label>Tu nombre (opcional)</label><input data-set="nombre" value="${esc(st.nombre)}" placeholder="Ej.: Os"></div>
+        <div><label>Punto de decisión</label><input type="date" data-set="decision" value="${esc(st.decision)}"></div>
+        <div><label>Fecha meta (último día)</label><input type="date" data-set="fechaMeta" value="${esc(st.fechaMeta)}"></div>
+      </div>
+      <p class="small muted">Si cambias la fecha meta, ajusta las fechas de los pasos de la Fase 3 en el Plan.</p>
+      <button class="btn sec sm" data-act="shift3">Reprogramar Fase 3 según la nueva fecha meta</button>
+    </div>
+    <div class="card"><h3>Privacidad</h3>
+      <p class="small">Los datos se guardan <b>solo en este navegador</b> (no se envían a ningún servidor). Quien abra el enlace en otro dispositivo verá la app vacía.</p>
+      ${CRYPTO_KEY?`<div class="note ok small">🔒 Cifrado activo (AES-256). Se pedirá la clave al abrir la app.</div>
+        <div class="row"><button class="btn sec sm" data-act="pwchange">Cambiar clave</button><button class="btn dan sm" data-act="pwoff">Quitar cifrado</button></div>`
+      :`<div class="note warn small">Recomendado: activa una clave para cifrar tus datos, sobre todo el registro de observaciones.</div>
+        <button class="btn sm" data-act="pwon">Activar clave</button>`}
+      <p class="small muted mt">Usa esta app solo en tus dispositivos personales. Al publicarla en Netlify, elige un nombre de sitio neutro.</p>
+    </div>
+  </div>
+  <div class="card mt"><h3>Valores base</h3>
+    <p class="small muted">Parámetros que usan los cálculos. Cámbialos si tu situación es distinta o si cambia la norma. Años de servicio a hoy: <b>${aniosServicio()}</b>.</p>
+    <div class="fgrid">
+      <div><label>Fecha de ingreso a la empresa</label><input type="date" data-set="fechaIngreso" value="${esc(st.fechaIngreso)}"></div>
+      <div><label>Última remuneración mensual ($)</label><input type="number" step="0.01" min="0" data-fin="sueldo" value="${esc(S.fin.sueldo)}"></div>
+      <div><label>Salario básico unificado ($)</label><input type="number" step="0.01" min="0" data-set="sbu" value="${esc(st.sbu)}"></div>
+      <div><label>Región (décimo cuarto)</label><select data-set="region"><option value="sierra" ${st.region==='sierra'?'selected':''}>Sierra / Amazonía</option><option value="costa" ${st.region==='costa'?'selected':''}>Costa / Galápagos</option></select></div>
+      <div><label>Bonificación por desahucio (% por año)</label><input type="number" step="0.01" min="0" data-set="pctDesahucio" value="${esc(st.pctDesahucio)}"></div>
+      <div><label>Días de preaviso del desahucio</label><input type="number" step="1" min="0" data-set="diasPreaviso" value="${esc(st.diasPreaviso)}"></div>
+      <div><label>Margen recomendado antes del límite (días)</label><input type="number" step="1" min="0" data-set="ajustePreaviso" value="${esc(st.ajustePreaviso)}"></div>
+      <div><label>Días de vacaciones anuales base</label><input type="number" step="1" min="0" data-set="vacBase" value="${esc(st.vacBase)}"></div>
+      <div><label>Día adicional de vacaciones a partir del año</label><input type="number" step="1" min="0" data-set="vacAdicDesde" value="${esc(st.vacAdicDesde)}"><div class="small muted">Ej.: 5 → desde el 6.º año suma 1 día por año</div></div>
+      <div><label>Máximo de días adicionales</label><input type="number" step="1" min="0" data-set="vacAdicMax" value="${esc(st.vacAdicMax)}"></div>
+      <div><label>Base de días para proporcionales</label><select data-set="baseDias"><option value="365" ${+st.baseDias===365?'selected':''}>365 días</option><option value="360" ${+st.baseDias===360?'selected':''}>360 días (comercial)</option></select></div>
+      <div><label>Fecha de pago de utilidades</label><input type="date" data-set="fechaUtilidades" value="${esc(st.fechaUtilidades)}"></div>
+      <div><label>Meta de colchón (meses)</label><input type="number" step="1" min="0" data-fin="metaMeses" value="${esc(S.fin.metaMeses)}"></div>
+      <div><label>Meta de clientes de consultoría</label><input type="number" step="1" min="0" data-fin="clientesMeta" value="${esc(S.fin.clientesMeta)}"></div>
+    </div>
+    <div class="mt"><button class="btn ghost sm" data-act="basereset">Restaurar valores base por defecto</button></div>
+  </div>
+  <div class="card mt"><h3>Respaldos</h3>
+    <p class="small muted">Descarga un respaldo periódico (sin cifrar) y guárdalo en un lugar seguro y personal. Si olvidas tu clave, solo podrás recuperar tus datos desde un respaldo.</p>
+    <div class="row"><button class="btn sm" data-act="export">⬇ Descargar respaldo .json</button>
+    <label class="btn sec sm" style="margin:0;color:var(--pri);cursor:pointer;display:inline-block">⬆ Restaurar respaldo<input type="file" accept=".json,application/json" id="impFile" style="display:none"></label>
+    <span class="sp"></span><button class="btn dan sm" data-act="reset">Reiniciar todo</button></div>
+  </div>`;
+};
+AFTER.ajustes = () => { const f=$('#impFile'); if(f) f.onchange = importFile; };
+
+/* =========================================================
+   MODALES
+   ========================================================= */
+function modal(title, bodyHtml, onSave, saveLbl='Guardar'){
+  $('#modalRoot').innerHTML = `<div class="modal-bg"><div class="modal"><h3>${title}</h3><form id="mForm">${bodyHtml}
+    <div class="row mt"><span class="sp"></span><button type="button" class="btn ghost" id="mCancel">Cancelar</button><button class="btn" type="submit">${saveLbl}</button></div></form></div></div>`;
+  const close = ()=>{ $('#modalRoot').innerHTML=''; };
+  $('#mCancel').onclick = close;
+  $('.modal-bg').addEventListener('mousedown', e=>{ if(e.target.classList.contains('modal-bg')) close(); });
+  $('#mForm').onsubmit = async e => { e.preventDefault(); const fd=Object.fromEntries(new FormData(e.target).entries()); const r = await onSave(fd); if(r!==false){ close(); save(); start(); } };
+  const first=$('#mForm input,#mForm textarea,#mForm select'); if(first) first.focus();
+}
+const fld = (n,l,v='',type='text',extra='') => `<div><label>${l}</label><input name="${n}" type="${type}" value="${esc(v)}" ${extra}></div>`;
+const area = (n,l,v='') => `<div style="grid-column:1/-1"><label>${l}</label><textarea name="${n}">${esc(v)}</textarea></div>`;
+const sel = (n,l,opts,v) => `<div><label>${l}</label><select name="${n}">${opts.map(o=>`<option ${o===v?'selected':''}>${esc(o)}</option>`).join('')}</select></div>`;
+
+function taskModal(t){
+  const isNew=!t; t = t || {fase:0,titulo:'',detalle:'',fecha:today(),nota:''};
+  modal(isNew?'Nuevo paso':'Editar paso', `<div class="fgrid">
+    <div><label>Fase</label><select name="fase">${FASES.map(f=>`<option value="${f.n}" ${+t.fase===f.n?'selected':''}>Fase ${f.n} · ${f.t}</option>`).join('')}</select></div>
+    ${fld('fecha','Fecha objetivo',t.fecha,'date')}
+    <div style="grid-column:1/-1"><label>Título</label><input name="titulo" required value="${esc(t.titulo)}" ${!isNew&&!t.custom?'readonly':''}></div>
+    ${isNew||t.custom?area('detalle','Detalle',t.detalle):''}
+    ${area('nota','Mi nota',t.nota)}</div>`,
+  fd=>{
+    if(isNew){ S.tasks.push({id:uid(),fase:+fd.fase,titulo:fd.titulo.trim(),detalle:fd.detalle||'',fecha:fd.fecha,done:false,doneAt:'',nota:fd.nota||'',custom:true}); S.open[+fd.fase]=true; }
+    else { const x=S.tasks.find(z=>z.id===t.id); x.fase=+fd.fase; x.fecha=fd.fecha; x.nota=fd.nota||''; if(x.custom){x.titulo=fd.titulo.trim(); x.detalle=fd.detalle||'';} }
+  });
+}
+function regModal(r){
+  const isNew=!r; r = r || {fecha:today(),area:AREAS[0],desc:'',comunicado:'si',aquien:'',medio:'Correo electrónico',ref:'',respuesta:''};
+  modal(isNew?'Nueva observación':'Editar observación', `<div class="fgrid">
+    ${fld('fecha','Fecha',r.fecha,'date','required')}
+    ${sel('area','Área',AREAS,r.area)}
+    <div style="grid-column:1/-1"><label>Observación (hechos objetivos)</label><textarea name="desc" required placeholder="Ej.: Comprobante de egreso nº ___ del __/__: falta comprobante de retención. Se devolvió para regularización.">${esc(r.desc)}</textarea></div>
+    <div><label>¿Lo comunicaste?</label><select name="comunicado"><option value="si" ${r.comunicado==='si'?'selected':''}>Sí</option><option value="no" ${r.comunicado==='no'?'selected':''}>No</option></select></div>
+    ${fld('aquien','¿A quién? (cargo)',r.aquien)}
+    ${sel('medio','Medio',['Correo electrónico','Memorando','Reunión','Mensaje','Otro'],r.medio)}
+    ${fld('ref','Referencia (asunto y fecha del correo / nº memo)',r.ref)}
+    ${area('respuesta','Respuesta recibida (opcional)',r.respuesta)}</div>`,
+  fd=>{ if(isNew) S.registro.push({id:uid(),...fd}); else Object.assign(S.registro.find(z=>z.id===r.id),fd); });
+}
+function busModal(b){
+  const isNew=!b; b = b || {tipo:'Empleo',org:'',cargo:'',contacto:'',estado:'Identificado',accion:'',fecha:'',notas:''};
+  modal(isNew?'Nueva oportunidad':'Editar oportunidad', `<div class="fgrid">
+    ${sel('tipo','Tipo',TIPOS,b.tipo)}
+    ${sel('estado','Estado',ESTADOS,b.estado)}
+    ${fld('org','Organización / persona',b.org,'text','required')}
+    ${fld('cargo','Cargo o servicio',b.cargo)}
+    ${fld('contacto','Contacto (nombre, teléfono)',b.contacto)}
+    ${fld('accion','Próxima acción',b.accion)}
+    ${fld('fecha','Fecha de la próxima acción',b.fecha,'date')}
+    ${area('notas','Notas',b.notas)}</div>`,
+  fd=>{ if(isNew) S.busqueda.push({id:uid(),...fd}); else Object.assign(S.busqueda.find(z=>z.id===b.id),fd); });
+}
+function wellModal(){
+  modal('Check-in semanal', `<div class="fgrid">
+    ${fld('fecha','Fecha',today(),'date','required')}
+    <div><label>Nivel de estrés (1–10)</label><input name="estres" type="number" min="1" max="10" value="6" required></div>
+    <div><label>Nivel de energía (1–10)</label><input name="energia" type="number" min="1" max="10" value="5" required></div>
+    ${area('nota','¿Qué pasó esta semana? ¿Qué te ayudó?','')}</div>`,
+  fd=>{ S.bienestar.push({id:uid(),fecha:fd.fecha,estres:Math.min(10,Math.max(1,+fd.estres)),energia:Math.min(10,Math.max(1,+fd.energia)),nota:fd.nota||''}); });
+}
+function pwModal(change){
+  if(!window.crypto||!crypto.subtle){ toast('Tu navegador no permite cifrado en esta página (requiere https).'); return; }
+  modal(change?'Cambiar clave':'Activar clave', `
+    <p class="small muted">Tus datos se cifrarán con AES-256 usando esta clave. <b>Si la olvidas, no hay forma de recuperarla</b>: descarga antes un respaldo.</p>
+    <div class="fgrid">${fld('p1','Nueva clave (mín. 6 caracteres)','','password','required minlength="6" autocomplete="new-password"')}${fld('p2','Repite la clave','','password','required autocomplete="new-password"')}</div>`,
+  async fd=>{
+    if(fd.p1!==fd.p2){ toast('Las claves no coinciden'); return false; }
+    CRYPTO_SALT = crypto.getRandomValues(new Uint8Array(16));
+    CRYPTO_KEY = await deriveKey(fd.p1, CRYPTO_SALT);
+    toast('Cifrado activado');
+  }, change?'Cambiar':'Activar');
+}
+
+/* =========================================================
+   EVENTOS
+   ========================================================= */
+document.addEventListener('click', e=>{
+  const go=e.target.closest('[data-go]'); if(go){ TAB=go.dataset.go; start(); window.scrollTo({top:0}); return; }
+  const el=e.target.closest('[data-act]'); if(!el) return;
+  const a=el.dataset.act, id=el.dataset.id;
+  switch(a){
+    case 'tdone': { const t=S.tasks.find(x=>x.id===id); t.done=el.checked; t.doneAt=t.done?today():''; save(); if(t.done) toast('✓ Paso cumplido'); start(); break; }
+    case 'ptoggle': S.open[el.dataset.f]=!S.open[el.dataset.f]; save(); render(); break;
+    case 'taddnew': taskModal(); break;
+    case 'tedit': taskModal(S.tasks.find(x=>x.id===id)); break;
+    case 'tdel': if(confirm('¿Eliminar este paso?')){ S.tasks=S.tasks.filter(x=>x.id!==id); save(); render(); } break;
+    case 'lchk': S.legal[id]=el.checked; save(); render(); break;
+    case 'radd': regModal(); break;
+    case 'redit': regModal(S.registro.find(x=>x.id===id)); break;
+    case 'rdel': if(confirm('¿Eliminar esta observación?')){ S.registro=S.registro.filter(x=>x.id!==id); save(); render(); } break;
+    case 'badd': busModal(); break;
+    case 'bedit': busModal(S.busqueda.find(x=>x.id===id)); break;
+    case 'bdel': if(confirm('¿Eliminar esta oportunidad?')){ S.busqueda=S.busqueda.filter(x=>x.id!==id); save(); render(); } break;
+    case 'wadd': wellModal(); break;
+    case 'wdel': S.bienestar=S.bienestar.filter(x=>x.id!==id); save(); render(); break;
+    case 'copy': { const txt=tplText(+el.dataset.i); (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>toast('Copiado al portapapeles')).catch(()=>{ const ta=document.createElement('textarea'); ta.value=txt; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); toast('Copiado'); }); break; }
+    case 'export': exportFile(); break;
+    case 'reset': if(confirm('Se borrarán TODOS tus datos de este navegador. ¿Descargaste un respaldo?') && confirm('¿Confirmas reiniciar todo?')){ localStorage.removeItem(STORE_PLAIN); localStorage.removeItem(STORE_ENC); location.reload(); } break;
+    case 'pwon': pwModal(false); break;
+    case 'pwchange': pwModal(true); break;
+    case 'pwoff': if(confirm('Tus datos quedarán guardados sin cifrar en este navegador. ¿Continuar?')){ CRYPTO_KEY=null; CRYPTO_SALT=null; save(); toast('Cifrado desactivado'); start(); } break;
+    case 'shift3': shiftPhase3(); break;
+    case 'basereset': if(confirm('¿Restaurar los parámetros legales a sus valores por defecto? (No cambia tus fechas ni tu sueldo)')){ Object.assign(S.settings, BASE_DEF); save(); start(); toast('Valores base restaurados'); } break;
+  }
+});
+document.addEventListener('change', e=>{
+  const el=e.target;
+  if(el.dataset.act==='tdate'){ const t=S.tasks.find(x=>x.id===el.dataset.id); t.fecha=el.value; save(); render(); return; }
+  if(el.dataset.set!==undefined){ const k=el.dataset.set; S.settings[k] = NUM_SET.includes(k) ? (+el.value||0) : el.value; save(); start(); return; }
+  if(el.dataset.fin!==undefined){ S.fin[el.dataset.fin]=+el.value||0; save(); render(); return; }
+  if(el.dataset.finb!==undefined){ S.fin[el.dataset.finb]=el.checked; save(); render(); return; }
+});
+
+function shiftPhase3(){
+  // Fechas por defecto de la Fase 3 estaban calculadas para 31-mar-2027
+  const base = pd('2027-03-31'), meta = pd(S.settings.fechaMeta);
+  const delta = dayDiff(base, meta);
+  const orig = {}; defaultTasks().filter(t=>t.fase===3).forEach(t=>orig[t.titulo]=t.fecha);
+  let n=0;
+  S.tasks.forEach(t=>{ if(t.fase===3 && !t.done && orig[t.titulo] && !/utilidades/i.test(t.titulo)){ t.fecha = iso(addDays(pd(orig[t.titulo]), delta)); n++; } });
+  S.settings.decision = iso(addDays(pd('2027-03-01'), delta));
+  save(); start(); toast(`${n} pasos reprogramados`);
+}
+function exportFile(){
+  const blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='miplan-respaldo-'+today()+'.json'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+  toast('Respaldo descargado');
+}
+function importFile(e){
+  const file=e.target.files[0]; if(!file) return;
+  const r=new FileReader();
+  r.onload=()=>{ try{ const d=JSON.parse(r.result); if(!d.tasks||!d.settings) throw 0; if(!confirm('Se reemplazarán los datos actuales por los del respaldo. ¿Continuar?')) return; S=migrate(d); save(); start(); toast('Respaldo restaurado'); }catch(_){ toast('Archivo no válido'); } };
+  r.readAsText(file);
+}
+
+boot();
+</script>
+</body>
+</html>
